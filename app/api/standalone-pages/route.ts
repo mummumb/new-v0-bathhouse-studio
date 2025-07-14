@@ -13,20 +13,14 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
+    const newPage = await request.json()
     const pages = getStandalonePages()
 
-    const newPage = {
-      id: Date.now(),
-      title: body.title,
-      slug: body.slug,
-      content: body.content,
-      status: body.status || "draft",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      metaTitle: body.metaTitle,
-      metaDescription: body.metaDescription,
-    }
+    // Generate new ID
+    const maxId = pages.length > 0 ? Math.max(...pages.map((p) => p.id)) : 0
+    newPage.id = maxId + 1
+    newPage.createdAt = new Date().toISOString()
+    newPage.updatedAt = new Date().toISOString()
 
     pages.push(newPage)
     saveStandalonePages(pages)

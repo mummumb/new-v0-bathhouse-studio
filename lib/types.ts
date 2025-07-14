@@ -5,12 +5,14 @@ export interface JournalPost {
   excerpt: string
   content: string
   author: string
-  publishedAt: string
-  imageUrl: string
+  date: string
+  readTime: string
+  category: string
+  image: string
+  published: boolean
   tags: string[]
-  status: "draft" | "published"
-  metaTitle?: string
-  metaDescription?: string
+  seoTitle?: string
+  seoDescription?: string
 }
 
 export interface Event {
@@ -25,19 +27,21 @@ export interface Event {
   price: number
   capacity: number
   instructor: string
-  imageUrl: string
   category: string
-  status: "draft" | "published"
-  metaTitle?: string
-  metaDescription?: string
+  image: string
+  published: boolean
+  bookingUrl?: string
+  requirements?: string[]
+  benefits?: string[]
+  seoTitle?: string
+  seoDescription?: string
 }
 
 export interface PageContent {
   id: string
   title: string
   content: string
-  section: string
-  updatedAt: string
+  lastUpdated: string
 }
 
 export interface Ritual {
@@ -45,22 +49,32 @@ export interface Ritual {
   title: string
   slug: string
   description: string
-  benefits: string[]
+  longDescription: string
   duration: string
-  instructor: string
-  instructorBio: string
+  temperature?: string
+  benefits: string[]
+  preparation: string[]
+  instructor: {
+    name: string
+    bio: string
+    image: string
+  }
   schedule: {
     day: string
     time: string
   }[]
-  faq: {
+  image: string
+  published: boolean
+  category: string
+  price?: number
+  capacity?: number
+  requirements?: string[]
+  faqs: {
     question: string
     answer: string
   }[]
-  imageUrl: string
-  status: "draft" | "published"
-  metaTitle?: string
-  metaDescription?: string
+  seoTitle?: string
+  seoDescription?: string
 }
 
 export interface StandalonePage {
@@ -68,9 +82,10 @@ export interface StandalonePage {
   title: string
   slug: string
   content: string
-  status: "draft" | "published"
+  published: boolean
   createdAt: string
   updatedAt: string
-  metaTitle?: string
-  metaDescription?: string
+  seoTitle?: string
+  seoDescription?: string
+  author?: string
 }

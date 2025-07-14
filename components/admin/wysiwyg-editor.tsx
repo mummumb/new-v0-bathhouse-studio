@@ -45,7 +45,7 @@ export default function WysiwygEditor({ value, onChange, placeholder }: WysiwygE
   }
 
   return (
-    <div className="border border-gray-300 rounded-lg overflow-hidden">
+    <div className="border border-gray-300 rounded-lg overflow-hidden relative">
       <div className="bg-gray-50 border-b border-gray-300 p-2 flex gap-1 flex-wrap">
         <button
           type="button"

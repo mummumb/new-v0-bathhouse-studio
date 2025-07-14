@@ -19,28 +19,18 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const body = await request.json()
+    const updatedPage = await request.json()
     const pages = getStandalonePages()
-    const pageIndex = pages.findIndex((p) => p.id === Number.parseInt(params.id))
+    const index = pages.findIndex((p) => p.id === Number.parseInt(params.id))
 
-    if (pageIndex === -1) {
+    if (index === -1) {
       return NextResponse.json({ error: "Page not found" }, { status: 404 })
     }
 
-    pages[pageIndex] = {
-      ...pages[pageIndex],
-      title: body.title,
-      slug: body.slug,
-      content: body.content,
-      status: body.status,
-      updatedAt: new Date().toISOString(),
-      metaTitle: body.metaTitle,
-      metaDescription: body.metaDescription,
-    }
-
+    pages[index] = { ...pages[index], ...updatedPage, updatedAt: new Date().toISOString() }
     saveStandalonePages(pages)
 
-    return NextResponse.json(pages[pageIndex])
+    return NextResponse.json(pages[index])
   } catch (error) {
     console.error("Error updating standalone page:", error)
     return NextResponse.json({ error: "Failed to update page" }, { status: 500 })
@@ -57,7 +47,6 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     }
 
     saveStandalonePages(filteredPages)
-
     return NextResponse.json({ message: "Page deleted successfully" })
   } catch (error) {
     console.error("Error deleting standalone page:", error)
