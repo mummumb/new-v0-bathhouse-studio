@@ -41,6 +41,7 @@
     "@sveltejs/kit": "latest",
     "@tailwindcss/typography": "latest",
     "@tanstack/react-query": "latest",
+    "@tiptap/extension-image": "^2.4.0",
     "@vercel/analytics": "latest",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
