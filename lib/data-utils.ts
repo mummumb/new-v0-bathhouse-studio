@@ -1,180 +1,201 @@
-import fs from "fs"
+import { promises as fs } from "fs"
 import path from "path"
 import type { JournalPost, Event, PageContent, Ritual, StandalonePage } from "./types"
 
-const dataDir = path.join(process.cwd(), "data")
+const DATA_DIR = path.join(process.cwd(), "data")
 
-// Ensure data directory exists
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true })
-}
-
-// Journal functions
-export function getJournalPosts(): JournalPost[] {
+// Generic file operations
+async function readJsonFile<T>(filename: string): Promise<T[]> {
   try {
-    const filePath = path.join(dataDir, "journal.json")
-    if (!fs.existsSync(filePath)) {
-      return []
-    }
-    const fileContents = fs.readFileSync(filePath, "utf8")
-    return JSON.parse(fileContents)
+    const filePath = path.join(DATA_DIR, filename)
+    const fileContent = await fs.readFile(filePath, "utf-8")
+    return JSON.parse(fileContent)
   } catch (error) {
-    console.error("Error reading journal posts:", error)
+    console.error(`Error reading ${filename}:`, error)
     return []
   }
 }
 
-export function saveJournalPosts(posts: JournalPost[]): void {
+async function writeJsonFile<T>(filename: string, data: T[]): Promise<void> {
   try {
-    const filePath = path.join(dataDir, "journal.json")
-    fs.writeFileSync(filePath, JSON.stringify(posts, null, 2))
+    const filePath = path.join(DATA_DIR, filename)
+    await fs.writeFile(filePath, JSON.stringify(data, null, 2), "utf-8")
   } catch (error) {
-    console.error("Error saving journal posts:", error)
+    console.error(`Error writing ${filename}:`, error)
     throw error
   }
 }
 
-export function getJournalPostById(id: number): JournalPost | null {
-  const posts = getJournalPosts()
-  return posts.find((post) => post.id === id) || null
+// Journal Posts
+export async function getJournalPosts(): Promise<JournalPost[]> {
+  return readJsonFile<JournalPost>("journal.json")
 }
 
-export function getJournalPostBySlug(slug: string): JournalPost | null {
-  const posts = getJournalPosts()
+export async function getJournalPost(slug: string): Promise<JournalPost | null> {
+  const posts = await getJournalPosts()
   return posts.find((post) => post.slug === slug) || null
 }
 
-// Events functions
-export function getEvents(): Event[] {
-  try {
-    const filePath = path.join(dataDir, "events.json")
-    if (!fs.existsSync(filePath)) {
-      return []
+export async function saveJournalPost(post: JournalPost): Promise<JournalPost> {
+  const posts = await getJournalPosts()
+  const existingIndex = posts.findIndex((p) => p.id === post.id)
+
+  if (existingIndex >= 0) {
+    posts[existingIndex] = { ...post, updatedAt: new Date().toISOString() }
+  } else {
+    const newPost = {
+      ...post,
+      id: Date.now().toString(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     }
-    const fileContents = fs.readFileSync(filePath, "utf8")
-    return JSON.parse(fileContents)
-  } catch (error) {
-    console.error("Error reading events:", error)
-    return []
+    posts.push(newPost)
   }
+
+  await writeJsonFile("journal.json", posts)
+  return posts.find((p) => p.id === post.id)!
 }
 
-export function saveEvents(events: Event[]): void {
-  try {
-    const filePath = path.join(dataDir, "events.json")
-    fs.writeFileSync(filePath, JSON.stringify(events, null, 2))
-  } catch (error) {
-    console.error("Error saving events:", error)
-    throw error
-  }
+export async function deleteJournalPost(id: string): Promise<void> {
+  const posts = await getJournalPosts()
+  const filteredPosts = posts.filter((post) => post.id !== id)
+  await writeJsonFile("journal.json", filteredPosts)
 }
 
-export function getEventById(id: number): Event | null {
-  const events = getEvents()
-  return events.find((event) => event.id === id) || null
+// Events
+export async function getEvents(): Promise<Event[]> {
+  return readJsonFile<Event>("events.json")
 }
 
-export function getEventBySlug(slug: string): Event | null {
-  const events = getEvents()
+export async function getEvent(slug: string): Promise<Event | null> {
+  const events = await getEvents()
   return events.find((event) => event.slug === slug) || null
 }
 
-// Page content functions
-export function getPageContent(): PageContent[] {
-  try {
-    const filePath = path.join(dataDir, "pages.json")
-    if (!fs.existsSync(filePath)) {
-      return []
+export async function saveEvent(event: Event): Promise<Event> {
+  const events = await getEvents()
+  const existingIndex = events.findIndex((e) => e.id === event.id)
+
+  if (existingIndex >= 0) {
+    events[existingIndex] = { ...event, updatedAt: new Date().toISOString() }
+  } else {
+    const newEvent = {
+      ...event,
+      id: Date.now().toString(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     }
-    const fileContents = fs.readFileSync(filePath, "utf8")
-    return JSON.parse(fileContents)
-  } catch (error) {
-    console.error("Error reading page content:", error)
-    return []
+    events.push(newEvent)
   }
+
+  await writeJsonFile("events.json", events)
+  return events.find((e) => e.id === event.id)!
 }
 
-export function savePageContent(pages: PageContent[]): void {
-  try {
-    const filePath = path.join(dataDir, "pages.json")
-    fs.writeFileSync(filePath, JSON.stringify(pages, null, 2))
-  } catch (error) {
-    console.error("Error saving page content:", error)
-    throw error
-  }
+export async function deleteEvent(id: string): Promise<void> {
+  const events = await getEvents()
+  const filteredEvents = events.filter((event) => event.id !== id)
+  await writeJsonFile("events.json", filteredEvents)
 }
 
-export function getPageContentById(id: string): PageContent | null {
-  const pages = getPageContent()
-  return pages.find((page) => page.id === id) || null
+// Page Content
+export async function getPageContent(): Promise<PageContent[]> {
+  return readJsonFile<PageContent>("pages.json")
 }
 
-// Rituals functions
-export function getRituals(): Ritual[] {
-  try {
-    const filePath = path.join(dataDir, "rituals.json")
-    if (!fs.existsSync(filePath)) {
-      return []
+export async function getPageContentBySection(section: string): Promise<PageContent | null> {
+  const pages = await getPageContent()
+  return pages.find((page) => page.section === section) || null
+}
+
+export async function savePageContent(page: PageContent): Promise<PageContent> {
+  const pages = await getPageContent()
+  const existingIndex = pages.findIndex((p) => p.id === page.id)
+
+  if (existingIndex >= 0) {
+    pages[existingIndex] = { ...page, updatedAt: new Date().toISOString() }
+  } else {
+    const newPage = {
+      ...page,
+      id: Date.now().toString(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     }
-    const fileContents = fs.readFileSync(filePath, "utf8")
-    return JSON.parse(fileContents)
-  } catch (error) {
-    console.error("Error reading rituals:", error)
-    return []
+    pages.push(newPage)
   }
+
+  await writeJsonFile("pages.json", pages)
+  return pages.find((p) => p.id === page.id)!
 }
 
-export function saveRituals(rituals: Ritual[]): void {
-  try {
-    const filePath = path.join(dataDir, "rituals.json")
-    fs.writeFileSync(filePath, JSON.stringify(rituals, null, 2))
-  } catch (error) {
-    console.error("Error saving rituals:", error)
-    throw error
-  }
+// Rituals
+export async function getRituals(): Promise<Ritual[]> {
+  return readJsonFile<Ritual>("rituals.json")
 }
 
-export function getRitualById(id: number): Ritual | null {
-  const rituals = getRituals()
-  return rituals.find((ritual) => ritual.id === id) || null
-}
-
-export function getRitualBySlug(slug: string): Ritual | null {
-  const rituals = getRituals()
+export async function getRitual(slug: string): Promise<Ritual | null> {
+  const rituals = await getRituals()
   return rituals.find((ritual) => ritual.slug === slug) || null
 }
 
-// Standalone pages functions
-export function getStandalonePages(): StandalonePage[] {
-  try {
-    const filePath = path.join(dataDir, "standalone-pages.json")
-    if (!fs.existsSync(filePath)) {
-      return []
+export async function saveRitual(ritual: Ritual): Promise<Ritual> {
+  const rituals = await getRituals()
+  const existingIndex = rituals.findIndex((r) => r.id === ritual.id)
+
+  if (existingIndex >= 0) {
+    rituals[existingIndex] = { ...ritual, updatedAt: new Date().toISOString() }
+  } else {
+    const newRitual = {
+      ...ritual,
+      id: Date.now().toString(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     }
-    const fileContents = fs.readFileSync(filePath, "utf8")
-    return JSON.parse(fileContents)
-  } catch (error) {
-    console.error("Error reading standalone pages:", error)
-    return []
+    rituals.push(newRitual)
   }
+
+  await writeJsonFile("rituals.json", rituals)
+  return rituals.find((r) => r.id === ritual.id)!
 }
 
-export function saveStandalonePages(pages: StandalonePage[]): void {
-  try {
-    const filePath = path.join(dataDir, "standalone-pages.json")
-    fs.writeFileSync(filePath, JSON.stringify(pages, null, 2))
-  } catch (error) {
-    console.error("Error saving standalone pages:", error)
-    throw error
-  }
+export async function deleteRitual(id: string): Promise<void> {
+  const rituals = await getRituals()
+  const filteredRituals = rituals.filter((ritual) => ritual.id !== id)
+  await writeJsonFile("rituals.json", filteredRituals)
 }
 
-export function getStandalonePageById(id: number): StandalonePage | null {
-  const pages = getStandalonePages()
-  return pages.find((page) => page.id === id) || null
+// Standalone Pages
+export async function getStandalonePages(): Promise<StandalonePage[]> {
+  return readJsonFile<StandalonePage>("standalone-pages.json")
 }
 
-export function getStandalonePageBySlug(slug: string): StandalonePage | null {
-  const pages = getStandalonePages()
+export async function getStandalonePage(slug: string): Promise<StandalonePage | null> {
+  const pages = await getStandalonePages()
   return pages.find((page) => page.slug === slug) || null
+}
+
+export async function saveStandalonePage(page: StandalonePage): Promise<StandalonePage> {
+  const pages = await getStandalonePages()
+  const existingIndex = pages.findIndex((p) => p.id === page.id)
+
+  if (existingIndex >= 0) {
+    pages[existingIndex] = { ...page, updatedAt: new Date().toISOString() }
+  } else {
+    const newPage = {
+      ...page,
+      id: Date.now().toString(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+    pages.push(newPage)
+  }
+
+  await writeJsonFile("standalone-pages.json", pages)
+  return pages.find((p) => p.id === page.id)!
+}
+
+export async function deleteStandalonePage(id: string): Promise<void> {
+  const pages = await getStandalonePages()
+  const filteredPages = pages.filter((page) => page.id !== id)
+  await writeJsonFile("standalone-pages.json", filteredPages)
 }

@@ -1,91 +1,108 @@
 export interface JournalPost {
-  id: number
+  id: string
   title: string
   slug: string
   excerpt: string
   content: string
-  author: string
-  date: string
-  readTime: string
-  category: string
   image: string
-  published: boolean
+  author: {
+    name: string
+    image: string
+  }
+  publishedAt: string
+  readTime: number
   tags: string[]
-  seoTitle?: string
-  seoDescription?: string
+  status: "published" | "draft"
+  createdAt: string
+  updatedAt: string
 }
 
 export interface Event {
-  id: number
+  id: string
   title: string
   slug: string
   description: string
+  longDescription: string
+  image: string
   date: string
   time: string
   duration: string
   location: string
   price: number
   capacity: number
-  instructor: string
-  category: string
-  image: string
-  published: boolean
-  bookingUrl?: string
-  requirements?: string[]
-  benefits?: string[]
-  seoTitle?: string
-  seoDescription?: string
-}
-
-export interface PageContent {
-  id: string
-  title: string
-  content: string
-  lastUpdated: string
-}
-
-export interface Ritual {
-  id: number
-  title: string
-  slug: string
-  description: string
-  longDescription: string
-  duration: string
-  temperature?: string
-  benefits: string[]
-  preparation: string[]
   instructor: {
     name: string
     bio: string
     image: string
   }
-  schedule: {
+  category: string
+  status: "published" | "draft"
+  bookingUrl?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface PageContent {
+  id: string
+  section: string
+  title: string
+  content: string
+  image?: string
+  metadata?: Record<string, any>
+  status: "published" | "draft"
+  createdAt: string
+  updatedAt: string
+}
+
+export interface Ritual {
+  id: string
+  title: string
+  slug: string
+  shortDescription: string
+  longDescription: string
+  image: string
+  instructor: {
+    name: string
+    bio: string
+    image: string
+  }
+  schedule: Array<{
     day: string
     time: string
-  }[]
-  image: string
-  published: boolean
-  category: string
-  price?: number
-  capacity?: number
-  requirements?: string[]
-  faqs: {
+  }>
+  benefits: string[]
+  faq: Array<{
     question: string
     answer: string
-  }[]
-  seoTitle?: string
-  seoDescription?: string
+  }>
+  status: "published" | "draft"
+  createdAt?: string
+  updatedAt?: string
 }
 
 export interface StandalonePage {
-  id: number
+  id: string
   title: string
   slug: string
   content: string
-  published: boolean
+  metaDescription?: string
+  image?: string
+  status: "published" | "draft"
   createdAt: string
   updatedAt: string
-  seoTitle?: string
-  seoDescription?: string
-  author?: string
+}
+
+export interface Service {
+  id: string
+  title: string
+  slug: string
+  description: string
+  longDescription: string
+  image: string
+  icon: string
+  benefits: string[]
+  duration?: string
+  price?: number
+  bookingRequired: boolean
+  status: "published" | "draft"
 }

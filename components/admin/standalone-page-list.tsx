@@ -1,87 +1,73 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Edit, Trash2, ExternalLink } from "lucide-react"
 import type { StandalonePage } from "@/lib/types"
+import Link from "next/link"
 
 interface StandalonePageListProps {
+  pages: StandalonePage[]
   onEdit: (page: StandalonePage) => void
-  onAdd: () => void
+  onDelete: (id: number) => void
+  isDeleting: boolean
 }
 
-export default function StandalonePageList({ onEdit, onAdd }: StandalonePageListProps) {
-  const [pages, setPages] = useState<StandalonePage[]>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    fetchPages()
-  }, [])
-
-  const fetchPages = async () => {
-    try {
-      const response = await fetch("/api/standalone-pages")
-      const data = await response.json()
-      setPages(data)
-    } catch (error) {
-      console.error("Error fetching pages:", error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleDelete = async (id: number) => {
-    if (confirm("Are you sure you want to delete this page?")) {
-      try {
-        await fetch(`/api/standalone-pages/${id}`, {
-          method: "DELETE",
-        })
-        fetchPages()
-      } catch (error) {
-        console.error("Error deleting page:", error)
-      }
-    }
-  }
-
-  if (loading) {
-    return <div>Loading pages...</div>
+export default function StandalonePageList({ pages, onEdit, onDelete, isDeleting }: StandalonePageListProps) {
+  if (pages.length === 0) {
+    return (
+      <Card>
+        <CardContent className="flex flex-col items-center justify-center py-12">
+          <p className="text-gray-500 mb-4">No standalone pages found.</p>
+          <p className="text-sm text-gray-400">Create your first standalone page to get started.</p>
+        </CardContent>
+      </Card>
+    )
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">Standalone Pages</h2>
-        <Button onClick={onAdd}>Add New Page</Button>
-      </div>
-
-      <div className="space-y-2">
-        {pages.map((page) => (
-          <div key={page.id} className="flex items-center justify-between p-4 border rounded-lg">
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <h3 className="font-medium">{page.title}</h3>
-                <Badge variant={page.published ? "default" : "secondary"}>
-                  {page.published ? "Published" : "Draft"}
-                </Badge>
+    <div className="grid gap-4">
+      {pages.map((page) => (
+        <Card key={page.id}>
+          <CardHeader>
+            <div className="flex justify-between items-start">
+              <div className="flex-1">
+                <CardTitle className="text-lg">{page.title}</CardTitle>
+                <CardDescription className="mt-1">Slug: /{page.slug}</CardDescription>
+                {page.metaDescription && <CardDescription className="mt-2">{page.metaDescription}</CardDescription>}
               </div>
-              <p className="text-sm text-gray-600">/{page.slug}</p>
-              <p className="text-xs text-gray-500">Updated: {new Date(page.updatedAt).toLocaleDateString()}</p>
+              <div className="flex items-center gap-2">
+                <Badge variant={page.status === "published" ? "default" : "secondary"}>{page.status}</Badge>
+                <div className="flex gap-1">
+                  <Button variant="ghost" size="sm" asChild>
+                    <Link href={`/p/${page.slug}`} target="_blank">
+                      <ExternalLink className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={() => onEdit(page)}>
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onDelete(Number.parseInt(page.id))}
+                    disabled={isDeleting}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={() => onEdit(page)}>
-                Edit
-              </Button>
-              <Button variant="destructive" size="sm" onClick={() => handleDelete(page.id)}>
-                Delete
-              </Button>
+          </CardHeader>
+          <CardContent>
+            <div className="text-sm text-gray-600">
+              <p>Created: {new Date(page.createdAt).toLocaleDateString()}</p>
+              <p>Updated: {new Date(page.updatedAt).toLocaleDateString()}</p>
             </div>
-          </div>
-        ))}
-      </div>
-
-      {pages.length === 0 && (
-        <div className="text-center py-8 text-gray-500">No pages found. Create your first page to get started.</div>
-      )}
+          </CardContent>
+        </Card>
+      ))}
     </div>
   )
 }
