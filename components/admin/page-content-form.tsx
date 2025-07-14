@@ -1,7 +1,7 @@
 "use client"
 
-import { useEffect } from "react"
-import { useForm, Controller } from "react-hook-form"
+import { useEffect, useState } from "react"
+import { useForm } from "react-hook-form"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -11,7 +11,7 @@ import type { PageContent } from "@/lib/types"
 import WysiwygEditor from "./wysiwyg-editor"
 
 interface PageContentFormProps {
-  page?: PageContent
+  page: PageContent
   onClose: () => void
   onSuccess: () => void
 }
@@ -19,18 +19,20 @@ interface PageContentFormProps {
 export default function PageContentForm({ page, onClose, onSuccess }: PageContentFormProps) {
   const { toast } = useToast()
   const queryClient = useQueryClient()
+  const [content, setContent] = useState(page.content)
+
   const {
-    control,
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm<PageContent>({
-    defaultValues: page || { id: "", title: "", content: "" },
+    defaultValues: page,
   })
 
   useEffect(() => {
-    reset(page || { id: "", title: "", content: "" })
+    reset(page)
+    setContent(page.content)
   }, [page, reset])
 
   const mutation = useMutation({
@@ -38,7 +40,11 @@ export default function PageContentForm({ page, onClose, onSuccess }: PageConten
       const response = await fetch(`/api/pages/${data.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          ...data,
+          content,
+          lastUpdated: new Date().toISOString(),
+        }),
       })
       if (!response.ok) {
         throw new Error("Failed to update page content")
@@ -63,50 +69,32 @@ export default function PageContentForm({ page, onClose, onSuccess }: PageConten
   })
 
   const onSubmit = (data: PageContent) => {
-    if (!data.title.trim()) {
-      toast({
-        title: "Error",
-        description: "Title is required",
-        variant: "destructive",
-      })
-      return
-    }
-    if (!data.content.trim()) {
-      toast({
-        title: "Error",
-        description: "Content is required",
-        variant: "destructive",
-      })
-      return
-    }
     mutation.mutate(data)
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <div>
-        <Label htmlFor="title">Title</Label>
-        <Input id="title" {...register("title", { required: true })} readOnly className="bg-gray-100" />
-        {errors.title && <p className="text-red-500 text-sm mt-1">Title is required</p>}
-      </div>
-      <div>
-        <Label htmlFor="content">Content</Label>
-        <Controller
-          name="content"
-          control={control}
-          rules={{ required: true }}
-          render={({ field }) => <WysiwygEditor content={field.value} onChange={field.onChange} />}
-        />
-        {errors.content && <p className="text-red-500 text-sm mt-1">Content is required</p>}
-      </div>
-      <div className="flex justify-end gap-2">
-        <Button type="button" variant="outline" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button type="submit" disabled={mutation.isPending}>
-          {mutation.isPending ? "Saving..." : "Save Changes"}
-        </Button>
-      </div>
-    </form>
+    <div className="bg-white p-6 rounded-lg border">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <div>
+          <Label htmlFor="title">Title</Label>
+          <Input id="title" {...register("title", { required: "Title is required" })} />
+          {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>}
+        </div>
+
+        <div>
+          <Label htmlFor="content">Content</Label>
+          <WysiwygEditor content={content} onChange={setContent} />
+        </div>
+
+        <div className="flex justify-end gap-2 pt-6 border-t">
+          <Button type="button" variant="outline" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button type="submit" disabled={mutation.isPending}>
+            {mutation.isPending ? "Saving..." : "Save Changes"}
+          </Button>
+        </div>
+      </form>
+    </div>
   )
 }

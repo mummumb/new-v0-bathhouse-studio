@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+import { type NextRequest, NextResponse } from "next/server"
 import { getStandalonePages, saveStandalonePages } from "@/lib/data-utils"
 import type { StandalonePage } from "@/lib/types"
 
@@ -12,16 +12,16 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const newPage: Omit<StandalonePage, "id"> = await request.json()
+    const newPage: Omit<StandalonePage, "id" | "createdAt" | "updatedAt"> = await request.json()
     const pages = getStandalonePages()
 
-    const id = Math.max(0, ...pages.map((p) => p.id)) + 1
     const page: StandalonePage = {
       ...newPage,
-      id,
-      publishedAt: new Date().toISOString(),
+      id: Math.max(0, ...pages.map((p) => p.id)) + 1,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     }
 
     pages.push(page)

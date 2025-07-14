@@ -4,15 +4,15 @@ export interface JournalPost {
   slug: string
   excerpt: string
   content: string
-  author: string
+  image: string
   publishedAt: string
-  readTime: number
+  status: "published" | "draft"
+  author: {
+    name: string
+    image: string
+  }
   tags: string[]
-  featured: boolean
-  status: "draft" | "published"
-  image?: string
-  seoTitle?: string
-  seoDescription?: string
+  readTime: number
 }
 
 export interface Event {
@@ -20,60 +20,51 @@ export interface Event {
   title: string
   slug: string
   description: string
-  shortDescription: string
+  image: string
   date: string
   time: string
-  duration: string
   location: string
   price: number
   capacity: number
-  instructor: string
+  status: "published" | "draft"
   category: string
-  level: string
-  benefits: string[]
-  requirements: string[]
-  image: string
-  status: "draft" | "published"
-  featured: boolean
-  bookingUrl?: string
-  seoTitle?: string
-  seoDescription?: string
-}
-
-export interface PageContent {
-  id: string
-  title: string
-  content: string
-}
-
-export interface Ritual {
-  id: number
-  title: string
-  slug: string
-  description: string
-  shortDescription: string
-  duration: string
-  benefits: string[]
-  process: string[]
   instructor: {
     name: string
     bio: string
     image: string
   }
-  schedule: {
+}
+
+export interface PageContent {
+  id: string
+  section: string
+  title: string
+  content: string
+  lastUpdated: string
+}
+
+export interface Ritual {
+  id: string
+  title: string
+  slug: string
+  shortDescription: string
+  longDescription: string
+  image: string
+  status: "published" | "draft"
+  instructor: {
+    name: string
+    bio: string
+    image: string
+  }
+  schedule: Array<{
     day: string
     time: string
-  }[]
-  faq: {
+  }>
+  benefits: string[]
+  faq: Array<{
     question: string
     answer: string
-  }[]
-  image: string
-  icon: string
-  status: "draft" | "published"
-  featured: boolean
-  seoTitle?: string
-  seoDescription?: string
+  }>
 }
 
 export interface StandalonePage {
@@ -81,8 +72,9 @@ export interface StandalonePage {
   title: string
   slug: string
   content: string
-  status: "draft" | "published"
-  publishedAt: string
-  seoTitle?: string
-  seoDescription?: string
+  metaTitle?: string
+  metaDescription?: string
+  status: "published" | "draft"
+  createdAt: string
+  updatedAt: string
 }

@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Edit, Trash2, ExternalLink } from "lucide-react"
 import type { StandalonePage } from "@/lib/types"
+import Link from "next/link"
 
 interface StandalonePageListProps {
   pages: StandalonePage[]
@@ -17,7 +18,7 @@ export default function StandalonePageList({ pages, onEdit, onDelete, isDeleting
   if (pages.length === 0) {
     return (
       <Card>
-        <CardContent className="p-6 text-center">
+        <CardContent className="text-center py-8">
           <p className="text-gray-500">No standalone pages found. Create your first page to get started.</p>
         </CardContent>
       </Card>
@@ -29,20 +30,22 @@ export default function StandalonePageList({ pages, onEdit, onDelete, isDeleting
       {pages.map((page) => (
         <Card key={page.id}>
           <CardHeader>
-            <div className="flex justify-between items-start">
+            <div className="flex items-start justify-between">
               <div>
                 <CardTitle className="text-lg">{page.title}</CardTitle>
                 <CardDescription>
-                  Slug: /{page.slug} • Published: {new Date(page.publishedAt).toLocaleDateString()}
+                  Slug: /{page.slug} • Updated: {new Date(page.updatedAt).toLocaleDateString()}
                 </CardDescription>
               </div>
               <div className="flex items-center gap-2">
                 <Badge variant={page.status === "published" ? "default" : "secondary"}>{page.status}</Badge>
-                <Button variant="ghost" size="sm" asChild>
-                  <a href={`/p/${page.slug}`} target="_blank" rel="noopener noreferrer">
-                    <ExternalLink className="h-4 w-4" />
-                  </a>
-                </Button>
+                {page.status === "published" && (
+                  <Button variant="ghost" size="sm" asChild>
+                    <Link href={`/p/${page.slug}`} target="_blank">
+                      <ExternalLink className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                )}
                 <Button variant="ghost" size="sm" onClick={() => onEdit(page)}>
                   <Edit className="h-4 w-4" />
                 </Button>

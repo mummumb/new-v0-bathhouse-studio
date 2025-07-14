@@ -1,28 +1,32 @@
-import { NextResponse } from "next/server"
+import { type NextRequest, NextResponse } from "next/server"
 import { getStandalonePages, saveStandalonePages } from "@/lib/data-utils"
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const id = Number.parseInt(params.id)
-    const updatedPage = await request.json()
+    const updatedData = await request.json()
     const pages = getStandalonePages()
 
-    const index = pages.findIndex((page) => page.id === id)
-    if (index === -1) {
+    const pageIndex = pages.findIndex((page) => page.id === id)
+    if (pageIndex === -1) {
       return NextResponse.json({ error: "Page not found" }, { status: 404 })
     }
 
-    pages[index] = { ...pages[index], ...updatedPage }
-    saveStandalonePages(pages)
+    pages[pageIndex] = {
+      ...pages[pageIndex],
+      ...updatedData,
+      updatedAt: new Date().toISOString(),
+    }
 
-    return NextResponse.json(pages[index])
+    saveStandalonePages(pages)
+    return NextResponse.json(pages[pageIndex])
   } catch (error) {
     console.error("Error updating standalone page:", error)
     return NextResponse.json({ error: "Failed to update page" }, { status: 500 })
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const id = Number.parseInt(params.id)
     const pages = getStandalonePages()

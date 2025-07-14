@@ -12,7 +12,6 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@hookform/resolvers": "latest",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-label": "^2.0.2",
@@ -24,11 +23,6 @@
     "@sveltejs/kit": "latest",
     "@tailwindcss/typography": "latest",
     "@tanstack/react-query": "latest",
-    "@tiptap/core": "latest",
-    "@tiptap/extension-image": "latest",
-    "@tiptap/pm": "latest",
-    "@tiptap/react": "latest",
-    "@tiptap/starter-kit": "latest",
     "@vercel/analytics": "latest",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

@@ -2,12 +2,10 @@
 
 import type React from "react"
 
-import { useEditor, EditorContent } from "@tiptap/react"
-import StarterKit from "@tiptap/starter-kit"
-import Image from "@tiptap/extension-image"
+import { useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
-import { Bold, Italic, List, ListOrdered, Quote, Heading2, Heading3, ImageIcon } from "lucide-react"
-import { useCallback, useRef } from "react"
+import { Textarea } from "@/components/ui/textarea"
+import { Bold, Italic, List, Quote, Heading1, Heading2, ImageIcon } from "lucide-react"
 
 interface WysiwygEditorProps {
   content: string
@@ -15,123 +13,88 @@ interface WysiwygEditorProps {
 }
 
 export default function WysiwygEditor({ content, onChange }: WysiwygEditorProps) {
+  const [isPreview, setIsPreview] = useState(false)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Image.configure({
-        HTMLAttributes: {
-          class: "max-w-full h-auto rounded-lg",
-        },
-      }),
-    ],
-    content,
-    onUpdate: ({ editor }) => {
-      onChange(editor.getHTML())
-    },
-    editorProps: {
-      attributes: {
-        class: "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none min-h-[200px] p-4",
-      },
-    },
-  })
+  const insertText = (before: string, after = "") => {
+    const textarea = textareaRef.current
+    if (!textarea) return
 
-  const addImage = useCallback(() => {
-    fileInputRef.current?.click()
-  }, [])
+    const start = textarea.selectionStart
+    const end = textarea.selectionEnd
+    const selectedText = content.substring(start, end)
+    const newText = content.substring(0, start) + before + selectedText + after + content.substring(end)
 
-  const handleImageUpload = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0]
-      if (file && editor) {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          const src = e.target?.result as string
-          editor.chain().focus().setImage({ src }).run()
-        }
-        reader.readAsDataURL(file)
-      }
-    },
-    [editor],
-  )
+    onChange(newText)
 
-  if (!editor) {
-    return null
+    // Restore cursor position
+    setTimeout(() => {
+      textarea.focus()
+      textarea.setSelectionRange(start + before.length, start + before.length + selectedText.length)
+    }, 0)
+  }
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      const result = e.target?.result as string
+      insertText(`<img src="${result}" alt="Uploaded image" style="max-width: 100%; height: auto; margin: 1rem 0;" />`)
+    }
+    reader.readAsDataURL(file)
   }
 
   return (
-    <div className="border rounded-lg">
-      <div className="border-b p-2 flex flex-wrap gap-1">
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          className={editor.isActive("bold") ? "bg-gray-200" : ""}
-        >
-          <Bold className="h-4 w-4" />
+    <div className="border rounded-md">
+      <div className="flex items-center gap-2 p-2 border-b bg-gray-50">
+        <Button type="button" variant="ghost" size="sm" onClick={() => insertText("<h1>", "</h1>")}>
+          <Heading1 className="h-4 w-4" />
         </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={editor.isActive("italic") ? "bg-gray-200" : ""}
-        >
-          <Italic className="h-4 w-4" />
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-          className={editor.isActive("heading", { level: 2 }) ? "bg-gray-200" : ""}
-        >
+        <Button type="button" variant="ghost" size="sm" onClick={() => insertText("<h2>", "</h2>")}>
           <Heading2 className="h-4 w-4" />
         </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-          className={editor.isActive("heading", { level: 3 }) ? "bg-gray-200" : ""}
-        >
-          <Heading3 className="h-4 w-4" />
+        <Button type="button" variant="ghost" size="sm" onClick={() => insertText("<strong>", "</strong>")}>
+          <Bold className="h-4 w-4" />
         </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={editor.isActive("bulletList") ? "bg-gray-200" : ""}
-        >
+        <Button type="button" variant="ghost" size="sm" onClick={() => insertText("<em>", "</em>")}>
+          <Italic className="h-4 w-4" />
+        </Button>
+        <Button type="button" variant="ghost" size="sm" onClick={() => insertText("<ul><li>", "</li></ul>")}>
           <List className="h-4 w-4" />
         </Button>
         <Button
           type="button"
           variant="ghost"
           size="sm"
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={editor.isActive("orderedList") ? "bg-gray-200" : ""}
-        >
-          <ListOrdered className="h-4 w-4" />
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          className={editor.isActive("blockquote") ? "bg-gray-200" : ""}
+          onClick={() => insertText("<blockquote><p>", "</p></blockquote>")}
         >
           <Quote className="h-4 w-4" />
         </Button>
-        <Button type="button" variant="ghost" size="sm" onClick={addImage}>
+        <Button type="button" variant="ghost" size="sm" onClick={() => fileInputRef.current?.click()}>
           <ImageIcon className="h-4 w-4" />
         </Button>
+        <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+        <div className="ml-auto">
+          <Button type="button" variant="outline" size="sm" onClick={() => setIsPreview(!isPreview)}>
+            {isPreview ? "Edit" : "Preview"}
+          </Button>
+        </div>
       </div>
-      <EditorContent editor={editor} />
-      <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+
+      {isPreview ? (
+        <div className="p-4 min-h-[200px] prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: content }} />
+      ) : (
+        <Textarea
+          ref={textareaRef}
+          value={content}
+          onChange={(e) => onChange(e.target.value)}
+          className="min-h-[200px] border-0 resize-none focus:ring-0"
+          placeholder="Start writing your content..."
+        />
+      )}
     </div>
   )
 }

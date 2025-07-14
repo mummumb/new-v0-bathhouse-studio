@@ -17,18 +17,13 @@ export function getJournalPosts(): JournalPost[] {
 }
 
 export function saveJournalPosts(posts: JournalPost[]): void {
-  const filePath = path.join(dataDir, "journal.json")
-  fs.writeFileSync(filePath, JSON.stringify(posts, null, 2))
-}
-
-export function getJournalPostById(id: number): JournalPost | undefined {
-  const posts = getJournalPosts()
-  return posts.find((post) => post.id === id)
-}
-
-export function getJournalPostBySlug(slug: string): JournalPost | undefined {
-  const posts = getJournalPosts()
-  return posts.find((post) => post.slug === slug)
+  try {
+    const filePath = path.join(dataDir, "journal.json")
+    fs.writeFileSync(filePath, JSON.stringify(posts, null, 2))
+  } catch (error) {
+    console.error("Error saving journal posts:", error)
+    throw error
+  }
 }
 
 // Events functions
@@ -44,18 +39,13 @@ export function getEvents(): Event[] {
 }
 
 export function saveEvents(events: Event[]): void {
-  const filePath = path.join(dataDir, "events.json")
-  fs.writeFileSync(filePath, JSON.stringify(events, null, 2))
-}
-
-export function getEventById(id: number): Event | undefined {
-  const events = getEvents()
-  return events.find((event) => event.id === id)
-}
-
-export function getEventBySlug(slug: string): Event | undefined {
-  const events = getEvents()
-  return events.find((event) => event.slug === slug)
+  try {
+    const filePath = path.join(dataDir, "events.json")
+    fs.writeFileSync(filePath, JSON.stringify(events, null, 2))
+  } catch (error) {
+    console.error("Error saving events:", error)
+    throw error
+  }
 }
 
 // Page content functions
@@ -71,17 +61,17 @@ export function getPageContent(): PageContent[] {
 }
 
 export function savePageContent(pages: PageContent[]): void {
-  const filePath = path.join(dataDir, "pages.json")
-  fs.writeFileSync(filePath, JSON.stringify(pages, null, 2))
-}
-
-export function getPageContentById(id: string): PageContent | undefined {
-  const pages = getPageContent()
-  return pages.find((page) => page.id === id)
+  try {
+    const filePath = path.join(dataDir, "pages.json")
+    fs.writeFileSync(filePath, JSON.stringify(pages, null, 2))
+  } catch (error) {
+    console.error("Error saving page content:", error)
+    throw error
+  }
 }
 
 // Rituals functions
-export function getRituals(): Ritual[] {
+export function getRitualsData(): Ritual[] {
   try {
     const filePath = path.join(dataDir, "rituals.json")
     const fileContents = fs.readFileSync(filePath, "utf8")
@@ -92,19 +82,14 @@ export function getRituals(): Ritual[] {
   }
 }
 
-export function saveRituals(rituals: Ritual[]): void {
-  const filePath = path.join(dataDir, "rituals.json")
-  fs.writeFileSync(filePath, JSON.stringify(rituals, null, 2))
-}
-
-export function getRitualById(id: number): Ritual | undefined {
-  const rituals = getRituals()
-  return rituals.find((ritual) => ritual.id === id)
-}
-
-export function getRitualBySlug(slug: string): Ritual | undefined {
-  const rituals = getRituals()
-  return rituals.find((ritual) => ritual.slug === slug)
+export function saveRitualsData(rituals: Ritual[]): void {
+  try {
+    const filePath = path.join(dataDir, "rituals.json")
+    fs.writeFileSync(filePath, JSON.stringify(rituals, null, 2))
+  } catch (error) {
+    console.error("Error saving rituals:", error)
+    throw error
+  }
 }
 
 // Standalone pages functions
@@ -120,16 +105,16 @@ export function getStandalonePages(): StandalonePage[] {
 }
 
 export function saveStandalonePages(pages: StandalonePage[]): void {
-  const filePath = path.join(dataDir, "standalone-pages.json")
-  fs.writeFileSync(filePath, JSON.stringify(pages, null, 2))
+  try {
+    const filePath = path.join(dataDir, "standalone-pages.json")
+    fs.writeFileSync(filePath, JSON.stringify(pages, null, 2))
+  } catch (error) {
+    console.error("Error saving standalone pages:", error)
+    throw error
+  }
 }
 
-export function getStandalonePageById(id: number): StandalonePage | undefined {
+export function getStandalonePageBySlug(slug: string): StandalonePage | null {
   const pages = getStandalonePages()
-  return pages.find((page) => page.id === id)
-}
-
-export function getStandalonePageBySlug(slug: string): StandalonePage | undefined {
-  const pages = getStandalonePages()
-  return pages.find((page) => page.slug === slug)
+  return pages.find((page) => page.slug === slug) || null
 }
