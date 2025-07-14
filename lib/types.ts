@@ -6,9 +6,13 @@ export interface JournalPost {
   content: string
   author: string
   publishedAt: string
-  image: string
+  readTime: number
   tags: string[]
-  isPublished: boolean
+  featured: boolean
+  status: "draft" | "published"
+  image?: string
+  seoTitle?: string
+  seoDescription?: string
 }
 
 export interface Event {
@@ -16,40 +20,41 @@ export interface Event {
   title: string
   slug: string
   description: string
+  shortDescription: string
   date: string
   time: string
+  duration: string
   location: string
   price: number
   capacity: number
-  image: string
-  isPublished: boolean
+  instructor: string
   category: string
+  level: string
+  benefits: string[]
+  requirements: string[]
+  image: string
+  status: "draft" | "published"
+  featured: boolean
+  bookingUrl?: string
+  seoTitle?: string
+  seoDescription?: string
 }
 
 export interface PageContent {
   id: string
   title: string
   content: string
-  section: string
-  lastUpdated: string
 }
 
 export interface Ritual {
   id: number
   title: string
   slug: string
-  subtitle: string
-  number: string
   description: string
-  fullDescription: string
-  image: string
-  imageAlt: string
-  date: string
-  location: string
-  icon?: string
-  isPublished: boolean
-  benefits: string[]
+  shortDescription: string
   duration: string
+  benefits: string[]
+  process: string[]
   instructor: {
     name: string
     bio: string
@@ -63,6 +68,12 @@ export interface Ritual {
     question: string
     answer: string
   }[]
+  image: string
+  icon: string
+  status: "draft" | "published"
+  featured: boolean
+  seoTitle?: string
+  seoDescription?: string
 }
 
 export interface StandalonePage {
@@ -70,9 +81,8 @@ export interface StandalonePage {
   title: string
   slug: string
   content: string
-  metaTitle?: string
-  metaDescription?: string
-  isPublished: boolean
-  createdAt: string
-  updatedAt: string
+  status: "draft" | "published"
+  publishedAt: string
+  seoTitle?: string
+  seoDescription?: string
 }

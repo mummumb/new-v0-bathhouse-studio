@@ -2,8 +2,6 @@
 
 import { useEffect } from "react"
 import { useForm, Controller } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -12,17 +10,13 @@ import { useToast } from "@/components/ui/use-toast"
 import type { PageContent } from "@/lib/types"
 import WysiwygEditor from "./wysiwyg-editor"
 
-const pageContentSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  content: z.string().min(1, "Content is required"),
-})
-
 interface PageContentFormProps {
-  pageContent?: PageContent
+  page?: PageContent
   onClose: () => void
+  onSuccess: () => void
 }
 
-export default function PageContentForm({ pageContent, onClose }: PageContentFormProps) {
+export default function PageContentForm({ page, onClose, onSuccess }: PageContentFormProps) {
   const { toast } = useToast()
   const queryClient = useQueryClient()
   const {
@@ -32,13 +26,12 @@ export default function PageContentForm({ pageContent, onClose }: PageContentFor
     reset,
     formState: { errors },
   } = useForm<PageContent>({
-    resolver: zodResolver(pageContentSchema),
-    defaultValues: pageContent || { id: "", title: "", content: "" },
+    defaultValues: page || { id: "", title: "", content: "" },
   })
 
   useEffect(() => {
-    reset(pageContent || { id: "", title: "", content: "" })
-  }, [pageContent, reset])
+    reset(page || { id: "", title: "", content: "" })
+  }, [page, reset])
 
   const mutation = useMutation({
     mutationFn: async (data: PageContent) => {
@@ -53,12 +46,12 @@ export default function PageContentForm({ pageContent, onClose }: PageContentFor
       return response.json()
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["pages"] })
+      queryClient.invalidateQueries({ queryKey: ["pageContent"] })
       toast({
         title: "Success!",
         description: "Page content has been updated.",
       })
-      onClose()
+      onSuccess()
     },
     onError: (error) => {
       toast({
@@ -70,6 +63,22 @@ export default function PageContentForm({ pageContent, onClose }: PageContentFor
   })
 
   const onSubmit = (data: PageContent) => {
+    if (!data.title.trim()) {
+      toast({
+        title: "Error",
+        description: "Title is required",
+        variant: "destructive",
+      })
+      return
+    }
+    if (!data.content.trim()) {
+      toast({
+        title: "Error",
+        description: "Content is required",
+        variant: "destructive",
+      })
+      return
+    }
     mutation.mutate(data)
   }
 
@@ -77,17 +86,18 @@ export default function PageContentForm({ pageContent, onClose }: PageContentFor
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
         <Label htmlFor="title">Title</Label>
-        <Input id="title" {...register("title")} readOnly className="bg-gray-100" />
-        {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>}
+        <Input id="title" {...register("title", { required: true })} readOnly className="bg-gray-100" />
+        {errors.title && <p className="text-red-500 text-sm mt-1">Title is required</p>}
       </div>
       <div>
         <Label htmlFor="content">Content</Label>
         <Controller
           name="content"
           control={control}
+          rules={{ required: true }}
           render={({ field }) => <WysiwygEditor content={field.value} onChange={field.onChange} />}
         />
-        {errors.content && <p className="text-red-500 text-sm mt-1">{errors.content.message}</p>}
+        {errors.content && <p className="text-red-500 text-sm mt-1">Content is required</p>}
       </div>
       <div className="flex justify-end gap-2">
         <Button type="button" variant="outline" onClick={onClose}>

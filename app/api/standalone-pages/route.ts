@@ -4,7 +4,7 @@ import type { StandalonePage } from "@/lib/types"
 
 export async function GET() {
   try {
-    const pages = await getStandalonePages()
+    const pages = getStandalonePages()
     return NextResponse.json(pages)
   } catch (error) {
     console.error("Error fetching standalone pages:", error)
@@ -14,21 +14,20 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const newPage: Omit<StandalonePage, "id" | "createdAt" | "updatedAt"> = await request.json()
-    const pages = await getStandalonePages()
-    const id = pages.length > 0 ? Math.max(...pages.map((p) => p.id)) + 1 : 1
-    const now = new Date().toISOString()
+    const newPage: Omit<StandalonePage, "id"> = await request.json()
+    const pages = getStandalonePages()
 
-    const pageWithId: StandalonePage = {
+    const id = Math.max(0, ...pages.map((p) => p.id)) + 1
+    const page: StandalonePage = {
       ...newPage,
       id,
-      createdAt: now,
-      updatedAt: now,
+      publishedAt: new Date().toISOString(),
     }
 
-    pages.push(pageWithId)
-    await saveStandalonePages(pages)
-    return NextResponse.json(pageWithId, { status: 201 })
+    pages.push(page)
+    saveStandalonePages(pages)
+
+    return NextResponse.json(page, { status: 201 })
   } catch (error) {
     console.error("Error creating standalone page:", error)
     return NextResponse.json({ error: "Failed to create page" }, { status: 500 })

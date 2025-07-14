@@ -1,8 +1,9 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Edit, Trash2 } from "lucide-react"
+import { Edit, Trash2, ExternalLink } from "lucide-react"
 import type { StandalonePage } from "@/lib/types"
 
 interface StandalonePageListProps {
@@ -13,38 +14,54 @@ interface StandalonePageListProps {
 }
 
 export default function StandalonePageList({ pages, onEdit, onDelete, isDeleting }: StandalonePageListProps) {
-  if (!pages || pages.length === 0) {
+  if (pages.length === 0) {
     return (
-      <div className="text-center py-12 border-2 border-dashed rounded-lg">
-        <h3 className="text-lg font-medium text-gray-600">No pages created yet.</h3>
-        <p className="text-sm text-gray-500">Click "New Page" to get started.</p>
-      </div>
+      <Card>
+        <CardContent className="p-6 text-center">
+          <p className="text-gray-500">No standalone pages found. Create your first page to get started.</p>
+        </CardContent>
+      </Card>
     )
   }
 
   return (
-    <div className="border rounded-lg bg-white">
-      <ul className="divide-y divide-gray-200">
-        {pages.map((page) => (
-          <li key={page.id} className="p-4 flex justify-between items-center hover:bg-gray-50">
-            <div>
-              <span className="font-medium text-gray-800">{page.title}</span>
-              <Badge variant={page.status === "published" ? "default" : "secondary"} className="ml-2">
-                {page.status}
-              </Badge>
-              <p className="text-sm text-gray-500">/{page.slug}</p>
+    <div className="space-y-4">
+      {pages.map((page) => (
+        <Card key={page.id}>
+          <CardHeader>
+            <div className="flex justify-between items-start">
+              <div>
+                <CardTitle className="text-lg">{page.title}</CardTitle>
+                <CardDescription>
+                  Slug: /{page.slug} • Published: {new Date(page.publishedAt).toLocaleDateString()}
+                </CardDescription>
+              </div>
+              <div className="flex items-center gap-2">
+                <Badge variant={page.status === "published" ? "default" : "secondary"}>{page.status}</Badge>
+                <Button variant="ghost" size="sm" asChild>
+                  <a href={`/p/${page.slug}`} target="_blank" rel="noopener noreferrer">
+                    <ExternalLink className="h-4 w-4" />
+                  </a>
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => onEdit(page)}>
+                  <Edit className="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => onDelete(page.id)} disabled={isDeleting}>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" onClick={() => onEdit(page)}>
-                <Edit className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" onClick={() => onDelete(page.id)} disabled={isDeleting}>
-                <Trash2 className="h-4 w-4 text-red-500" />
-              </Button>
-            </div>
-          </li>
-        ))}
-      </ul>
+          </CardHeader>
+          <CardContent>
+            <div
+              className="text-sm text-gray-600 line-clamp-3"
+              dangerouslySetInnerHTML={{
+                __html: page.content.replace(/<[^>]*>/g, "").substring(0, 200) + "...",
+              }}
+            />
+          </CardContent>
+        </Card>
+      ))}
     </div>
   )
 }
