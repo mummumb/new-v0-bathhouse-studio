@@ -1,0 +1,123 @@
+[
+  {
+    "id": 1,
+    "slug": "breathwork-ritual",
+    "number": "01",
+    "title": "Breathwork",
+    "subtitle": "Come home to your breath.",
+    "description": "In this guided ritual, breath becomes your anchor, a gentle yet powerful tool for shifting energy, settling the nervous system, and reconnecting to what matters. Whether you arrive with stress, fatigue, or curiosity, this practice will meet you where you are.",
+    "fullDescription": "No performance. No pressure. Just space to slow down, listen in, and breathe with intention. Each session is layered with rhythm, stillness and presence, a chance to let go, drop in, and return to yourself.",
+    "image": "/images/ritual-immersion.jpeg",
+    "imageAlt": "A person sitting peacefully by the water, embodying the stillness achieved through breathwork.",
+    "date": "Weekly Sessions",
+    "location": "Online & In-Studio",
+    "instructor": {
+      "name": "Amanda Berger",
+      "title": "Founder & Breathwork Facilitator",
+      "bio": "Amanda brings over 17 years of experience in wellness and movement, creating transformative experiences that honor traditional practices while welcoming all levels of experience.",
+      "image": "/images/amanda-berger-headshot.jpeg"
+    },
+    "schedule": [
+      { "time": "7:00 PM", "activity": "Arrival & Settling" },
+      { "time": "7:15 PM", "activity": "Opening & Intention Setting" },
+      { "time": "7:30 PM", "activity": "Guided Breathwork Journey" },
+      { "time": "8:15 PM", "activity": "Integration in Silence" },
+      { "time": "8:30 PM", "activity": "Closing Circle" }
+    ],
+    "faqs": [
+      {
+        "question": "Do I need any experience with breathwork?",
+        "answer": "Not at all. This practice is designed to welcome complete beginners alongside experienced practitioners. Amanda will guide you through everything."
+      },
+      {
+        "question": "What should I bring?",
+        "answer": "Just yourself and comfortable clothing. We provide mats, blankets, and any props needed for the session."
+      }
+    ],
+    "benefits": [
+      "Reduced stress and anxiety",
+      "Improved emotional regulation",
+      "Enhanced mental clarity",
+      "Better sleep quality"
+    ],
+    "isPublished": true
+  },
+  {
+    "id": 2,
+    "slug": "aufguss-ritual",
+    "number": "02",
+    "title": "Aufguss",
+    "subtitle": "Heat with purpose. Steam with soul.",
+    "description": "Guided by the Master, this ritual channels heat, scent and sound into a powerful sensory journey. Through intentional towel movement, steam is carried in waves, energising, releasing, and restoring.",
+    "fullDescription": "You don't just sit in the heat, you move through it. And on the other side, you return lighter, clearer, and deeply reset.",
+    "image": "/images/ritual-amanda-aufguss.jpeg",
+    "imageAlt": "Amanda Berger performing an Aufguss ritual with a towel in a warmly lit sauna.",
+    "date": "August 15, 2025",
+    "location": "Melbourne, VIC",
+    "icon": "🔥",
+    "instructor": {
+      "name": "Amanda Berger",
+      "title": "Founder & Certified Aufguss Master",
+      "bio": "With over 17 years of experience in wellness and movement, Amanda brings authentic European sauna traditions to Australia. As one of Australia's first certified Aufguss Masters, her passion is creating inclusive, transformative experiences.",
+      "image": "/images/amanda-berger-headshot.jpeg"
+    },
+    "schedule": [
+      { "time": "4:00 PM", "activity": "Arrival & Welcome" },
+      { "time": "4:15 PM", "activity": "Introduction to Aufguss" },
+      { "time": "4:30 PM", "activity": "First Round: Awakening" },
+      { "time": "5:00 PM", "activity": "Cool-down & Hydration" },
+      { "time": "5:30 PM", "activity": "Second Round: Deep Release" },
+      { "time": "6:00 PM", "activity": "Final Cool-down & Integration" }
+    ],
+    "faqs": [
+      {
+        "question": "What should I wear?",
+        "answer": "We recommend wearing a comfortable swimsuit or swimwear. A clean towel will be provided for you to sit on inside the sauna."
+      },
+      {
+        "question": "Is this suitable for beginners?",
+        "answer": "Absolutely. Amanda will guide you through the entire experience, and you are free to exit the sauna at any time if you feel uncomfortable."
+      }
+    ],
+    "benefits": ["Deep detoxification", "Improved circulation", "Stress relief", "Mental clarity"],
+    "isPublished": true
+  },
+  {
+    "id": 3,
+    "slug": "sound-ritual",
+    "number": "03",
+    "title": "Sound",
+    "subtitle": "Let it all settle.",
+    "description": "This ritual invites you into stillness, a deep listening experience where vibration becomes medicine. With gongs, bowls, and resonant tones, sound gently moves through the body, clearing noise and quieting the mind.",
+    "fullDescription": "There's nothing to do but receive. As the layers of sound rise and fall, you'll soften, unwind, and return to a deeper rhythm within.",
+    "image": "/images/ritual-community.jpeg",
+    "imageAlt": "A serene space set up for sound healing with singing bowls and instruments.",
+    "date": "Monthly Sessions",
+    "location": "Studio & Retreats",
+    "instructor": {
+      "name": "Amanda Berger",
+      "title": "Founder & Sound Healing Practitioner",
+      "bio": "Amanda's sound healing practice draws from years of studying vibrational medicine and its effects on the nervous system. She creates deeply restorative experiences using traditional instruments.",
+      "image": "/images/amanda-berger-headshot.jpeg"
+    },
+    "schedule": [
+      { "time": "6:00 PM", "activity": "Arrival & Settling" },
+      { "time": "6:15 PM", "activity": "Opening & Intention Setting" },
+      { "time": "6:30 PM", "activity": "Sound Journey Begins" },
+      { "time": "7:15 PM", "activity": "Integration in Silence" },
+      { "time": "7:30 PM", "activity": "Gentle Return & Closing" }
+    ],
+    "faqs": [
+      {
+        "question": "What instruments are used?",
+        "answer": "Amanda uses a variety of instruments including Tibetan singing bowls, crystal bowls, gongs, chimes, and other resonant instruments."
+      },
+      {
+        "question": "Do I need to do anything during the session?",
+        "answer": "Nothing at all. This is a completely receptive practice. You simply lie down comfortably and allow the sounds to wash over you."
+      }
+    ],
+    "benefits": ["Deep relaxation", "Nervous system regulation", "Improved sleep", "Emotional release"],
+    "isPublished": true
+  }
+]

@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Bathhouse Studio Brand Colors - Exact matches from style guide */
+  --bathhouse-black: #000000; /* Pantone Black 6 C */
+  --bathhouse-white: #ffffff; /* Standard White */
+  --bathhouse-cream: #f2ebde; /* Pantone 9224 C */
+  --bathhouse-slate: #5a6870; /* Pantone 431 C */
+  --bathhouse-sand: #cebdaa; /* Pantone 4735 C (Stone) */
+  --bathhouse-teal: #598c82; /* Pantone 747 5 C (Green) */
+  --bathhouse-rose: #b59597; /* Pantone 500 C (Pink) */
+  --bathhouse-sage: #78909c; /* Pantone 2165 C (Blue) */
+  --bathhouse-warm: #e2be9c; /* Pantone 473 C (Peach) */
+}
+
+@layer base {
+  body {
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: theme(fontFamily.heading);
+    font-weight: 300;
+    letter-spacing: -0.025em;
+  }
+}
+
+@layer components {
+  .bathhouse-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .bathhouse-section {
+    @apply py-16 sm:py-20 lg:py-24;
+  }
+
+  .bathhouse-text-balance {
+    text-wrap: balance;
+  }
+
+  .bathhouse-heading {
+    font-family: theme(fontFamily.heading);
+    font-weight: 300;
+    letter-spacing: -0.025em;
+  }
+
+  .bathhouse-subheading {
+    @apply font-sans;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  /* Mobile-optimized text truncation */
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+@layer utilities {
+  /* Custom scrollbar for mobile category filters */
+  .overflow-x-auto::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .overflow-x-auto::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .overflow-x-auto::-webkit-scrollbar-thumb {
+    background: theme(colors.bathhouse.slate);
+    border-radius: 2px;
+  }
+
+  .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+    background: theme(colors.bathhouse.teal);
+  }
+}

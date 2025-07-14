@@ -1,0 +1,25 @@
+[
+  {
+    "id": "aufguss-ritual-section",
+    "title": "The Aufguss Ritual Section",
+    "content": {
+      "heading": "The Aufguss Ritual",
+      "subheading": "A five-step multi sensory journey of Steam, Aromatherapy, Music, Towel Waving & The Master. Creating an experience based on knowledge, creativity & professionalism to take you on an authentic wellbeing journey.",
+      "master_knows_heading": "An Aufguss Master Knows…",
+      "benefits_subheading": "Enter our sessions without technology, guided breathwork & find a quiet space to have a true meditative experience.",
+      "quote": "\"A sauna master does with their rituals as a sommelier does with their wine.\"",
+      "quote_cite": "— Amanda Berger"
+    }
+  },
+  {
+    "id": "about-section",
+    "title": "About Section",
+    "content": {
+      "heading": "Our Story",
+      "subheading": "For years we lived in overdrive, until we stepped into the steam, slowed our breath, and found a new rhythm. This is the sauna life, and we're here to help you find yours.",
+      "paragraph1": "For nearly two decades, Amanda was the go-to for all things fitness. But after having two children and staying true to her belief that balance is the key to lasting success, she shifted her focus toward wellness.",
+      "paragraph2": "Forty-two saunas across five countries later (and still counting), Amanda has become one of Australia's first certified Aufguss Masters, guiding others in the art of sauna done right.",
+      "paragraph3": "With Bathhouse Studio set to open in 2026 and a growing calendar of interstate events, Amanda is building Australia's sauna culture, one ritual at a time."
+    }
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "slug": "sauna-aufguss",
+    "title": "Sauna Aufguss",
+    "category": "Sauna",
+    "description": "Heat with purpose. Steam with soul. Guided by the Master, this ritual channels heat, scent and sound into a powerful sensory journey. Through intentional towel movement, steam is carried in waves, energising, releasing, and restoring. You don't just sit in the heat, you move through it. And on the other side, you return lighter, clearer, and deeply reset.",
+    "image": "/images/ritual-amanda-aufguss.jpeg",
+    "date": "2025-06-14T00:00:00.000Z",
+    "time": "4:00 PM - 7:00 PM",
+    "location": "Bathhouse Studio",
+    "capacity": 12,
+    "price": 60,
+    "isPublished": true
+  },
+  {
+    "id": 2,
+    "slug": "sound-bath-meditation",
+    "title": "Sound Bath Meditation",
+    "category": "Mindfulness",
+    "description": "Where sound becomes stillness. Join us in November for a meditative ritual inviting you to lie back, close your eyes, and be gently held by waves of sound. Using gongs, bowls and harmonic tones, the Master creates a space where tension dissolves and your nervous system can deeply settle. No effort. No expectation. Just sound, silence, and the spaciousness to return to yourself.",
+    "image": "/images/ritual-community.jpeg",
+    "date": "2024-11-09T00:00:00.000Z",
+    "time": "6:00 PM - 8:00 PM",
+    "location": "Bathhouse Studio",
+    "capacity": 20,
+    "price": 40,
+    "isPublished": true
+  }
+]
