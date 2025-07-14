@@ -1,139 +1,103 @@
 "use client"
 
-import type React from "react"
-
-import { useEffect, useRef, useState } from "react"
-import { Bold, Italic, List, ListOrdered, Quote, Type, ImageIcon } from "lucide-react"
+import { useState } from "react"
+import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
+import { Bold, Italic, List, Link, Eye, Edit } from "lucide-react"
 
 interface WysiwygEditorProps {
-  value: string
-  onChange: (value: string) => void
+  content: string
+  onChange: (content: string) => void
   placeholder?: string
 }
 
-export default function WysiwygEditor({ value, onChange, placeholder }: WysiwygEditorProps) {
-  const editorRef = useRef<HTMLDivElement>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const [isInitialized, setIsInitialized] = useState(false)
+export default function WysiwygEditor({ content, onChange, placeholder }: WysiwygEditorProps) {
+  const [isPreview, setIsPreview] = useState(false)
 
-  useEffect(() => {
-    if (editorRef.current && !isInitialized) {
-      editorRef.current.innerHTML = value
-      setIsInitialized(true)
-    }
-  }, [value, isInitialized])
+  const insertText = (before: string, after = "") => {
+    const textarea = document.querySelector('textarea[data-wysiwyg="true"]') as HTMLTextAreaElement
+    if (!textarea) return
 
-  const handleInput = () => {
-    if (editorRef.current) {
-      onChange(editorRef.current.innerHTML)
-    }
+    const start = textarea.selectionStart
+    const end = textarea.selectionEnd
+    const selectedText = content.substring(start, end)
+    const newText = content.substring(0, start) + before + selectedText + after + content.substring(end)
+
+    onChange(newText)
+
+    // Restore cursor position
+    setTimeout(() => {
+      textarea.focus()
+      textarea.setSelectionRange(start + before.length, end + before.length)
+    }, 0)
   }
 
-  const execCommand = (command: string, value?: string) => {
-    document.execCommand(command, false, value)
-    editorRef.current?.focus()
-    handleInput()
-  }
-
-  const handleImageUpload = () => {
-    fileInputRef.current?.click()
-  }
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file && file.type.startsWith("image/")) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const imageDataUrl = e.target?.result as string
-        execCommand(
-          "insertHTML",
-          `<img src="${imageDataUrl}" alt="Uploaded image" style="max-width: 100%; height: auto; margin: 1rem 0;" />`,
-        )
-      }
-      reader.readAsDataURL(file)
+  const formatText = (type: string) => {
+    switch (type) {
+      case "bold":
+        insertText("**", "**")
+        break
+      case "italic":
+        insertText("*", "*")
+        break
+      case "list":
+        insertText("\n- ", "")
+        break
+      case "link":
+        insertText("[", "](url)")
+        break
     }
   }
 
-  const insertHeading = (level: number) => {
-    const selection = window.getSelection()
-    if (selection && selection.rangeCount > 0) {
-      const range = selection.getRangeAt(0)
-      const selectedText = range.toString()
-      const headingText = selectedText || "Heading"
-      execCommand("insertHTML", `<h${level}>${headingText}</h${level}>`)
-    }
+  const renderPreview = (text: string) => {
+    return text
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+      .replace(/\*(.*?)\*/g, "<em>$1</em>")
+      .replace(/\[(.*?)\]$$(.*?)$$/g, '<a href="$2" class="text-blue-600 underline">$1</a>')
+      .replace(/^- (.+)$/gm, "<li>$1</li>")
+      .replace(/(<li>.*<\/li>)/s, '<ul class="list-disc pl-5">$1</ul>')
+      .replace(/\n/g, "<br>")
   }
 
   return (
-    <div className="border border-gray-300 rounded-lg overflow-hidden bg-white">
-      {/* Toolbar */}
-      <div className="border-b border-gray-200 p-2 flex flex-wrap gap-1 bg-gray-50">
-        <Button type="button" variant="ghost" size="sm" onClick={() => insertHeading(2)} className="h-8 px-2">
-          <Type className="h-4 w-4" />
-          H2
-        </Button>
-        <Button type="button" variant="ghost" size="sm" onClick={() => insertHeading(3)} className="h-8 px-2">
-          <Type className="h-4 w-4" />
-          H3
-        </Button>
-        <div className="w-px h-6 bg-gray-300 mx-1" />
-        <Button type="button" variant="ghost" size="sm" onClick={() => execCommand("bold")} className="h-8 px-2">
+    <div className="border rounded-md">
+      <div className="flex items-center gap-2 p-2 border-b bg-gray-50">
+        <Button type="button" variant="ghost" size="sm" onClick={() => formatText("bold")} disabled={isPreview}>
           <Bold className="h-4 w-4" />
         </Button>
-        <Button type="button" variant="ghost" size="sm" onClick={() => execCommand("italic")} className="h-8 px-2">
+        <Button type="button" variant="ghost" size="sm" onClick={() => formatText("italic")} disabled={isPreview}>
           <Italic className="h-4 w-4" />
         </Button>
-        <div className="w-px h-6 bg-gray-300 mx-1" />
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => execCommand("insertUnorderedList")}
-          className="h-8 px-2"
-        >
+        <Button type="button" variant="ghost" size="sm" onClick={() => formatText("list")} disabled={isPreview}>
           <List className="h-4 w-4" />
         </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => execCommand("insertOrderedList")}
-          className="h-8 px-2"
-        >
-          <ListOrdered className="h-4 w-4" />
+        <Button type="button" variant="ghost" size="sm" onClick={() => formatText("link")} disabled={isPreview}>
+          <Link className="h-4 w-4" />
         </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => execCommand("formatBlock", "blockquote")}
-          className="h-8 px-2"
-        >
-          <Quote className="h-4 w-4" />
-        </Button>
-        <div className="w-px h-6 bg-gray-300 mx-1" />
-        <Button type="button" variant="ghost" size="sm" onClick={handleImageUpload} className="h-8 px-2">
-          <ImageIcon className="h-4 w-4" />
-        </Button>
+        <div className="ml-auto">
+          <Button type="button" variant="ghost" size="sm" onClick={() => setIsPreview(!isPreview)}>
+            {isPreview ? <Edit className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            {isPreview ? "Edit" : "Preview"}
+          </Button>
+        </div>
       </div>
 
-      {/* Editor */}
-      <div
-        ref={editorRef}
-        contentEditable
-        onInput={handleInput}
-        className="min-h-[300px] p-4 focus:outline-none prose prose-sm max-w-none"
-        style={{
-          fontSize: "14px",
-          lineHeight: "1.5",
-          fontFamily: "system-ui, -apple-system, sans-serif",
-        }}
-        data-placeholder={placeholder}
-      />
-
-      {/* Hidden file input */}
-      <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+      <div className="p-3">
+        {isPreview ? (
+          <div
+            className="min-h-[200px] prose prose-sm max-w-none"
+            dangerouslySetInnerHTML={{ __html: renderPreview(content) }}
+          />
+        ) : (
+          <Textarea
+            data-wysiwyg="true"
+            value={content}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={placeholder || "Start writing..."}
+            className="min-h-[200px] border-0 resize-none focus-visible:ring-0"
+          />
+        )}
+      </div>
     </div>
   )
 }

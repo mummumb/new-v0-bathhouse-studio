@@ -1,100 +1,82 @@
 "use client"
 
-import { useEffect } from "react"
-import { useForm, Controller } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import type React from "react"
+
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useToast } from "@/components/ui/use-toast"
-import type { PageContent } from "@/lib/types"
 import WysiwygEditor from "./wysiwyg-editor"
-
-const pageContentSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  content: z.string().min(1, "Content is required"),
-})
+import type { PageContent } from "@/lib/types"
 
 interface PageContentFormProps {
   pageContent?: PageContent
-  onClose: () => void
+  onSave: (pageContent: PageContent) => void
+  onCancel: () => void
 }
 
-export default function PageContentForm({ pageContent, onClose }: PageContentFormProps) {
-  const { toast } = useToast()
-  const queryClient = useQueryClient()
-  const {
-    control,
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<PageContent>({
-    resolver: zodResolver(pageContentSchema),
-    defaultValues: pageContent || { id: "", title: "", content: "" },
+export default function PageContentForm({ pageContent, onSave, onCancel }: PageContentFormProps) {
+  const [formData, setFormData] = useState<PageContent>({
+    id: pageContent?.id || "",
+    title: pageContent?.title || "",
+    content: pageContent?.content || "",
+    lastUpdated: new Date().toISOString(),
   })
 
-  useEffect(() => {
-    reset(pageContent || { id: "", title: "", content: "" })
-  }, [pageContent, reset])
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
-  const mutation = useMutation({
-    mutationFn: async (data: PageContent) => {
-      const response = await fetch(`/api/pages/${data.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
-      if (!response.ok) {
-        throw new Error("Failed to update page content")
-      }
-      return response.json()
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["pages"] })
-      toast({
-        title: "Success!",
-        description: "Page content has been updated.",
-      })
-      onClose()
-    },
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      })
-    },
-  })
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {}
 
-  const onSubmit = (data: PageContent) => {
-    mutation.mutate(data)
+    if (!formData.title.trim()) {
+      newErrors.title = "Title is required"
+    }
+
+    if (!formData.content.trim()) {
+      newErrors.content = "Content is required"
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (validateForm()) {
+      onSave({
+        ...formData,
+        lastUpdated: new Date().toISOString(),
+      })
+    }
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div>
         <Label htmlFor="title">Title</Label>
-        <Input id="title" {...register("title")} readOnly className="bg-gray-100" />
-        {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>}
+        <Input
+          id="title"
+          value={formData.title}
+          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+          className={errors.title ? "border-red-500" : ""}
+        />
+        {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
       </div>
+
       <div>
         <Label htmlFor="content">Content</Label>
-        <Controller
-          name="content"
-          control={control}
-          render={({ field }) => <WysiwygEditor content={field.value} onChange={field.onChange} />}
+        <WysiwygEditor
+          value={formData.content}
+          onChange={(content) => setFormData({ ...formData, content })}
+          placeholder="Enter your page content..."
         />
-        {errors.content && <p className="text-red-500 text-sm mt-1">{errors.content.message}</p>}
+        {errors.content && <p className="text-red-500 text-sm mt-1">{errors.content}</p>}
       </div>
-      <div className="flex justify-end gap-2">
-        <Button type="button" variant="outline" onClick={onClose}>
+
+      <div className="flex gap-2">
+        <Button type="submit">Save</Button>
+        <Button type="button" variant="outline" onClick={onCancel}>
           Cancel
-        </Button>
-        <Button type="submit" disabled={mutation.isPending}>
-          {mutation.isPending ? "Saving..." : "Save Changes"}
         </Button>
       </div>
     </form>

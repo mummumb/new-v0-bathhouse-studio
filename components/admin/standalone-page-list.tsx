@@ -1,9 +1,11 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Edit, Trash2 } from "lucide-react"
+import { Edit, Trash2, ExternalLink } from "lucide-react"
 import type { StandalonePage } from "@/lib/types"
+import Link from "next/link"
 
 interface StandalonePageListProps {
   pages: StandalonePage[]
@@ -13,38 +15,59 @@ interface StandalonePageListProps {
 }
 
 export default function StandalonePageList({ pages, onEdit, onDelete, isDeleting }: StandalonePageListProps) {
-  if (!pages || pages.length === 0) {
+  if (pages.length === 0) {
     return (
-      <div className="text-center py-12 border-2 border-dashed rounded-lg">
-        <h3 className="text-lg font-medium text-gray-600">No pages created yet.</h3>
-        <p className="text-sm text-gray-500">Click "New Page" to get started.</p>
-      </div>
+      <Card>
+        <CardContent className="flex flex-col items-center justify-center py-12">
+          <p className="text-gray-500 mb-4">No standalone pages found.</p>
+          <p className="text-sm text-gray-400">Create your first standalone page to get started.</p>
+        </CardContent>
+      </Card>
     )
   }
 
   return (
-    <div className="border rounded-lg bg-white">
-      <ul className="divide-y divide-gray-200">
-        {pages.map((page) => (
-          <li key={page.id} className="p-4 flex justify-between items-center hover:bg-gray-50">
-            <div>
-              <span className="font-medium text-gray-800">{page.title}</span>
-              <Badge variant={page.status === "published" ? "default" : "secondary"} className="ml-2">
-                {page.status}
-              </Badge>
-              <p className="text-sm text-gray-500">/{page.slug}</p>
+    <div className="grid gap-4">
+      {pages.map((page) => (
+        <Card key={page.id}>
+          <CardHeader>
+            <div className="flex justify-between items-start">
+              <div className="flex-1">
+                <CardTitle className="text-lg">{page.title}</CardTitle>
+                <CardDescription className="mt-1">Slug: /{page.slug}</CardDescription>
+                {page.metaDescription && <CardDescription className="mt-2">{page.metaDescription}</CardDescription>}
+              </div>
+              <div className="flex items-center gap-2">
+                <Badge variant={page.status === "published" ? "default" : "secondary"}>{page.status}</Badge>
+                <div className="flex gap-1">
+                  <Button variant="ghost" size="sm" asChild>
+                    <Link href={`/p/${page.slug}`} target="_blank">
+                      <ExternalLink className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={() => onEdit(page)}>
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onDelete(Number.parseInt(page.id))}
+                    disabled={isDeleting}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" onClick={() => onEdit(page)}>
-                <Edit className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" onClick={() => onDelete(page.id)} disabled={isDeleting}>
-                <Trash2 className="h-4 w-4 text-red-500" />
-              </Button>
+          </CardHeader>
+          <CardContent>
+            <div className="text-sm text-gray-600">
+              <p>Created: {new Date(page.createdAt).toLocaleDateString()}</p>
+              <p>Updated: {new Date(page.updatedAt).toLocaleDateString()}</p>
             </div>
-          </li>
-        ))}
-      </ul>
+          </CardContent>
+        </Card>
+      ))}
     </div>
   )
 }
