@@ -4,10 +4,18 @@ import type { JournalPost, Event, PageContent, Ritual, StandalonePage } from "./
 
 const dataDir = path.join(process.cwd(), "data")
 
+// Ensure data directory exists
+if (!fs.existsSync(dataDir)) {
+  fs.mkdirSync(dataDir, { recursive: true })
+}
+
 // Journal functions
 export function getJournalPosts(): JournalPost[] {
   try {
     const filePath = path.join(dataDir, "journal.json")
+    if (!fs.existsSync(filePath)) {
+      return []
+    }
     const fileContents = fs.readFileSync(filePath, "utf8")
     return JSON.parse(fileContents)
   } catch (error) {
@@ -26,10 +34,23 @@ export function saveJournalPosts(posts: JournalPost[]): void {
   }
 }
 
+export function getJournalPostById(id: number): JournalPost | null {
+  const posts = getJournalPosts()
+  return posts.find((post) => post.id === id) || null
+}
+
+export function getJournalPostBySlug(slug: string): JournalPost | null {
+  const posts = getJournalPosts()
+  return posts.find((post) => post.slug === slug) || null
+}
+
 // Events functions
 export function getEvents(): Event[] {
   try {
     const filePath = path.join(dataDir, "events.json")
+    if (!fs.existsSync(filePath)) {
+      return []
+    }
     const fileContents = fs.readFileSync(filePath, "utf8")
     return JSON.parse(fileContents)
   } catch (error) {
@@ -48,10 +69,23 @@ export function saveEvents(events: Event[]): void {
   }
 }
 
+export function getEventById(id: number): Event | null {
+  const events = getEvents()
+  return events.find((event) => event.id === id) || null
+}
+
+export function getEventBySlug(slug: string): Event | null {
+  const events = getEvents()
+  return events.find((event) => event.slug === slug) || null
+}
+
 // Page content functions
 export function getPageContent(): PageContent[] {
   try {
     const filePath = path.join(dataDir, "pages.json")
+    if (!fs.existsSync(filePath)) {
+      return []
+    }
     const fileContents = fs.readFileSync(filePath, "utf8")
     return JSON.parse(fileContents)
   } catch (error) {
@@ -70,10 +104,18 @@ export function savePageContent(pages: PageContent[]): void {
   }
 }
 
+export function getPageContentById(id: string): PageContent | null {
+  const pages = getPageContent()
+  return pages.find((page) => page.id === id) || null
+}
+
 // Rituals functions
-export function getRitualsData(): Ritual[] {
+export function getRituals(): Ritual[] {
   try {
     const filePath = path.join(dataDir, "rituals.json")
+    if (!fs.existsSync(filePath)) {
+      return []
+    }
     const fileContents = fs.readFileSync(filePath, "utf8")
     return JSON.parse(fileContents)
   } catch (error) {
@@ -82,7 +124,7 @@ export function getRitualsData(): Ritual[] {
   }
 }
 
-export function saveRitualsData(rituals: Ritual[]): void {
+export function saveRituals(rituals: Ritual[]): void {
   try {
     const filePath = path.join(dataDir, "rituals.json")
     fs.writeFileSync(filePath, JSON.stringify(rituals, null, 2))
@@ -92,10 +134,23 @@ export function saveRitualsData(rituals: Ritual[]): void {
   }
 }
 
+export function getRitualById(id: number): Ritual | null {
+  const rituals = getRituals()
+  return rituals.find((ritual) => ritual.id === id) || null
+}
+
+export function getRitualBySlug(slug: string): Ritual | null {
+  const rituals = getRituals()
+  return rituals.find((ritual) => ritual.slug === slug) || null
+}
+
 // Standalone pages functions
 export function getStandalonePages(): StandalonePage[] {
   try {
     const filePath = path.join(dataDir, "standalone-pages.json")
+    if (!fs.existsSync(filePath)) {
+      return []
+    }
     const fileContents = fs.readFileSync(filePath, "utf8")
     return JSON.parse(fileContents)
   } catch (error) {
@@ -112,6 +167,11 @@ export function saveStandalonePages(pages: StandalonePage[]): void {
     console.error("Error saving standalone pages:", error)
     throw error
   }
+}
+
+export function getStandalonePageById(id: number): StandalonePage | null {
+  const pages = getStandalonePages()
+  return pages.find((page) => page.id === id) || null
 }
 
 export function getStandalonePageBySlug(slug: string): StandalonePage | null {

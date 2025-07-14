@@ -1,148 +1,206 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { useForm } from "react-hook-form"
+import type React from "react"
+
+import { useState } from "react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useToast } from "@/components/ui/use-toast"
-import type { StandalonePage } from "@/lib/types"
 import WysiwygEditor from "./wysiwyg-editor"
+import type { StandalonePage } from "@/lib/types"
 
 interface StandalonePageFormProps {
   page?: StandalonePage
   onClose: () => void
-  onSuccess: () => void
 }
 
-export default function StandalonePageForm({ page, onClose, onSuccess }: StandalonePageFormProps) {
-  const { toast } = useToast()
-  const queryClient = useQueryClient()
-  const [content, setContent] = useState(page?.content || "")
-  const [status, setStatus] = useState<"published" | "draft">(page?.status || "draft")
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<StandalonePage>({
-    defaultValues: page || {
-      id: 0,
-      title: "",
-      slug: "",
-      content: "",
-      metaTitle: "",
-      metaDescription: "",
-      status: "draft",
-      createdAt: "",
-      updatedAt: "",
-    },
+export default function StandalonePageForm({ page, onClose }: StandalonePageFormProps) {
+  const [formData, setFormData] = useState({
+    title: page?.title || "",
+    slug: page?.slug || "",
+    content: page?.content || "",
+    status: page?.status || "draft",
+    metaTitle: page?.metaTitle || "",
+    metaDescription: page?.metaDescription || "",
   })
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
-  useEffect(() => {
-    if (page) {
-      reset(page)
-      setContent(page.content)
-      setStatus(page.status)
-    }
-  }, [page, reset])
+  const queryClient = useQueryClient()
 
   const mutation = useMutation({
-    mutationFn: async (data: StandalonePage) => {
-      const url = data.id ? `/api/standalone-pages/${data.id}` : "/api/standalone-pages"
-      const method = data.id ? "PUT" : "POST"
+    mutationFn: async (data: typeof formData) => {
+      const url = page ? `/api/standalone-pages/${page.id}` : "/api/standalone-pages"
+
       const response = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...data,
-          content,
-          status,
-        }),
+        method: page ? "PUT" : "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       })
+
       if (!response.ok) {
-        throw new Error(`Failed to ${data.id ? "update" : "create"} page`)
+        throw new Error("Failed to save page")
       }
+
       return response.json()
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["standalonePages"] })
-      toast({
-        title: "Success!",
-        description: `Page has been ${page?.id ? "updated" : "created"}.`,
-      })
-      onSuccess()
-    },
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      })
+      onClose()
     },
   })
 
-  const onSubmit = (data: StandalonePage) => {
-    mutation.mutate(data)
+  const generateSlug = (title: string) => {
+    return title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "")
+  }
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {}
+
+    if (!formData.title.trim()) {
+      newErrors.title = "Title is required"
+    }
+
+    if (!formData.slug.trim()) {
+      newErrors.slug = "Slug is required"
+    }
+
+    if (!formData.content.trim()) {
+      newErrors.content = "Content is required"
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (validateForm()) {
+      mutation.mutate(formData)
+    }
+  }
+
+  const handleTitleChange = (title: string) => {
+    setFormData({
+      ...formData,
+      title,
+      slug: formData.slug || generateSlug(title),
+    })
   }
 
   return (
-    <div className="bg-white p-6 rounded-lg border">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <Label htmlFor="title">Title</Label>
-            <Input id="title" {...register("title", { required: "Title is required" })} />
-            {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>}
-          </div>
-          <div>
-            <Label htmlFor="slug">Slug</Label>
-            <Input id="slug" {...register("slug", { required: "Slug is required" })} />
-            {errors.slug && <p className="text-red-500 text-sm mt-1">{errors.slug.message}</p>}
-          </div>
-        </div>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+        <h2 className="text-xl font-semibold mb-4">{page ? "Edit Page" : "Add New Page"}</h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <Label htmlFor="metaTitle">Meta Title (SEO)</Label>
-            <Input id="metaTitle" {...register("metaTitle")} />
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+                Title
+              </label>
+              <input
+                type="text"
+                id="title"
+                value={formData.title}
+                onChange={(e) => handleTitleChange(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
+            </div>
+
+            <div>
+              <label htmlFor="slug" className="block text-sm font-medium text-gray-700 mb-1">
+                Slug
+              </label>
+              <input
+                type="text"
+                id="slug"
+                value={formData.slug}
+                onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="url-friendly-name"
+              />
+              {errors.slug && <p className="text-red-500 text-sm mt-1">{errors.slug}</p>}
+            </div>
           </div>
+
           <div>
-            <Label htmlFor="status">Status</Label>
-            <Select value={status} onValueChange={(value: "published" | "draft") => setStatus(value)}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="draft">Draft</SelectItem>
-                <SelectItem value="published">Published</SelectItem>
-              </SelectContent>
-            </Select>
+            <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
+              Status
+            </label>
+            <select
+              id="status"
+              value={formData.status}
+              onChange={(e) => setFormData({ ...formData, status: e.target.value as "draft" | "published" })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+            </select>
           </div>
-        </div>
 
-        <div>
-          <Label htmlFor="metaDescription">Meta Description (SEO)</Label>
-          <Input id="metaDescription" {...register("metaDescription")} />
-        </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Content</label>
+            <WysiwygEditor
+              value={formData.content}
+              onChange={(value) => setFormData({ ...formData, content: value })}
+              placeholder="Enter your page content here..."
+            />
+            {errors.content && <p className="text-red-500 text-sm mt-1">{errors.content}</p>}
+          </div>
 
-        <div>
-          <Label htmlFor="content">Content</Label>
-          <WysiwygEditor content={content} onChange={setContent} />
-        </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="metaTitle" className="block text-sm font-medium text-gray-700 mb-1">
+                Meta Title (SEO)
+              </label>
+              <input
+                type="text"
+                id="metaTitle"
+                value={formData.metaTitle}
+                onChange={(e) => setFormData({ ...formData, metaTitle: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="SEO title for search engines"
+              />
+            </div>
 
-        <div className="flex justify-end gap-2 pt-6 border-t">
-          <Button type="button" variant="outline" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button type="submit" disabled={mutation.isPending}>
-            {mutation.isPending ? "Saving..." : "Save Page"}
-          </Button>
-        </div>
-      </form>
+            <div>
+              <label htmlFor="metaDescription" className="block text-sm font-medium text-gray-700 mb-1">
+                Meta Description (SEO)
+              </label>
+              <textarea
+                id="metaDescription"
+                value={formData.metaDescription}
+                onChange={(e) => setFormData({ ...formData, metaDescription: e.target.value })}
+                rows={2}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Brief description for search engines"
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-2 pt-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={mutation.isPending}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+            >
+              {mutation.isPending ? "Saving..." : "Save"}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   )
 }

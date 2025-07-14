@@ -28,7 +28,7 @@ export default function StandalonePage({ params }: PageProps) {
             </header>
 
             <div
-              className="prose prose-lg max-w-none prose-headings:font-light prose-headings:text-bathhouse-slate prose-p:text-bathhouse-slate prose-p:leading-relaxed prose-a:text-bathhouse-teal prose-a:no-underline hover:prose-a:underline prose-strong:text-bathhouse-slate prose-blockquote:border-l-bathhouse-teal prose-blockquote:text-bathhouse-slate prose-ul:text-bathhouse-slate prose-ol:text-bathhouse-slate"
+              className="prose prose-lg max-w-none prose-headings:font-light prose-headings:text-bathhouse-slate prose-p:text-bathhouse-slate prose-p:leading-relaxed prose-a:text-bathhouse-teal prose-a:no-underline hover:prose-a:underline prose-strong:text-bathhouse-slate prose-blockquote:border-l-bathhouse-teal prose-blockquote:text-bathhouse-slate prose-ul:text-bathhouse-slate prose-ol:text-bathhouse-slate prose-li:text-bathhouse-slate"
               dangerouslySetInnerHTML={{ __html: page.content }}
             />
           </article>
@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: PageProps) {
   }
 
   return {
-    title: page.metaTitle || page.title,
+    title: page.metaTitle || `${page.title} | Bathhouse Studio`,
     description: page.metaDescription || `${page.title} - Bathhouse Studio`,
   }
 }
