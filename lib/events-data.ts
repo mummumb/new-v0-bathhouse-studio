@@ -1,5 +1,3 @@
-"use server"
-
 // Helper function to format date
 function formatEventDate(dateString: string) {
   const date = new Date(dateString)

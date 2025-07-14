@@ -1,108 +1,78 @@
 export interface JournalPost {
-  id: string
+  id: number
   title: string
   slug: string
   excerpt: string
   content: string
-  image: string
-  author: {
-    name: string
-    image: string
-  }
+  author: string
   publishedAt: string
-  readTime: number
+  image: string
   tags: string[]
-  status: "published" | "draft"
-  createdAt: string
-  updatedAt: string
+  isPublished: boolean
 }
 
 export interface Event {
-  id: string
+  id: number
   title: string
   slug: string
   description: string
-  longDescription: string
-  image: string
   date: string
   time: string
-  duration: string
   location: string
   price: number
   capacity: number
-  instructor: {
-    name: string
-    bio: string
-    image: string
-  }
+  image: string
+  isPublished: boolean
   category: string
-  status: "published" | "draft"
-  bookingUrl?: string
-  createdAt: string
-  updatedAt: string
 }
 
 export interface PageContent {
   id: string
-  section: string
   title: string
   content: string
-  image?: string
-  metadata?: Record<string, any>
-  status: "published" | "draft"
-  createdAt: string
-  updatedAt: string
+  section: string
+  lastUpdated: string
 }
 
 export interface Ritual {
-  id: string
+  id: number
   title: string
   slug: string
-  shortDescription: string
-  longDescription: string
+  subtitle: string
+  number: string
+  description: string
+  fullDescription: string
   image: string
+  imageAlt: string
+  date: string
+  location: string
+  icon?: string
+  isPublished: boolean
+  benefits: string[]
+  duration: string
   instructor: {
     name: string
     bio: string
     image: string
   }
-  schedule: Array<{
+  schedule: {
     day: string
     time: string
-  }>
-  benefits: string[]
-  faq: Array<{
+  }[]
+  faq: {
     question: string
     answer: string
-  }>
-  status: "published" | "draft"
-  createdAt?: string
-  updatedAt?: string
+  }[]
 }
 
 export interface StandalonePage {
-  id: string
+  id: number
   title: string
   slug: string
   content: string
+  metaTitle?: string
   metaDescription?: string
-  image?: string
-  status: "published" | "draft"
+  isPublished: boolean
   createdAt: string
   updatedAt: string
-}
-
-export interface Service {
-  id: string
-  title: string
-  slug: string
-  description: string
-  longDescription: string
-  image: string
-  icon: string
-  benefits: string[]
-  duration?: string
-  price?: number
-  bookingRequired: boolean
-  status: "published" | "draft"
 }
