@@ -1,3 +1,5 @@
+"use server"
+
 import { promises as fs } from "fs"
 import path from "path"
 import type { JournalPost, Event, PageContent, Ritual, StandalonePage } from "./types"

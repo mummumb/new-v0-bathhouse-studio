@@ -1,3 +1,5 @@
+"use server"
+
 // This file acts as a mock database or CMS for the journal posts.
 // It's easy to replace this with a real data source like a headless CMS in the future.
 
