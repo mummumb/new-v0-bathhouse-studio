@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic'
 export async function GET(_request: Request, { params }: { params: { id: string } }) {
   try {
     const pages = await getStandalonePages()
-    const page = pages.find((p) => p.id === Number.parseInt(params.id))
+    const page = pages.find((p) => p.id === params.id)
 
     if (!page) {
       return NextResponse.json({ error: "Page not found" }, { status: 404 })
