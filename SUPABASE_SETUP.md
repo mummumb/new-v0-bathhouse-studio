@@ -14,21 +14,26 @@
 1. In Supabase dashboard, go to Settings → Database
 2. Copy the "Connection string" (URI)
 3. It will look like:
-   ```
+
+   ```env
    postgresql://postgres:[YOUR-PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres
    ```
 
 ## 3. Environment Variables
 
 ### For Local Development
+
 Keep using SQLite in `.env`:
+
 ```env
 DATABASE_PROVIDER="sqlite"
 DATABASE_URL="file:./bathhouse.db"
 ```
 
 ### For Vercel Production
+
 Add these environment variables in Vercel dashboard:
+
 ```env
 DATABASE_PROVIDER="postgresql"
 DATABASE_URL="your-supabase-connection-string"
@@ -37,6 +42,7 @@ DATABASE_URL="your-supabase-connection-string"
 ## 4. Deploy Database Schema
 
 ### Option A: Using Prisma Migrate (Recommended)
+
 ```bash
 # Set production environment variables temporarily
 export DATABASE_PROVIDER="postgresql"
@@ -50,10 +56,13 @@ npm run db:generate
 ```
 
 ### Option B: Using Supabase SQL Editor
+
 1. Generate SQL from Prisma:
+
    ```bash
    npx prisma migrate dev --create-only --name init
    ```
+
 2. Copy the SQL from `prisma/migrations/*/migration.sql`
 3. Run in Supabase SQL Editor
 
@@ -76,10 +85,12 @@ npm run db:seed
 2. In Vercel:
    - Import project or create preview deployment
    - Add environment variables:
-     ```
+
+     ```env
      DATABASE_PROVIDER=postgresql
      DATABASE_URL=your-supabase-connection-string
      ```
+
 3. Deploy!
 
 ## 7. Connection Pooling (Optional but Recommended)
@@ -90,21 +101,25 @@ For better performance, use Supabase's connection pooler:
 2. Find "Connection Pooling" section
 3. Use the "Connection pooling" connection string
 4. Add `?pgbouncer=true` to the URL:
-   ```
+
+   ```env
    postgresql://postgres:[PASSWORD]@[HOST]:6543/postgres?pgbouncer=true
    ```
 
 ## Troubleshooting
 
 ### "Too many connections" error
+
 - Use the connection pooling URL
 - Reduce `max` connections in Prisma schema
 
 ### Schema sync issues
+
 - Run `npm run db:push` to sync schema
 - Check Supabase logs for errors
 
 ### Data not persisting
+
 - Verify DATABASE_URL in Vercel env vars
 - Check Supabase dashboard for data
 
