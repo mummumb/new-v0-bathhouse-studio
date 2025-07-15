@@ -1,4 +1,4 @@
-import Navigation from "@/components/navigation"
+import { Navigation } from "@/components/navigation"
 import EnhancedHeroVideo from "@/components/enhanced-hero-video"
 import AufgussRitualSection from "@/components/aufguss-ritual-section"
 import CommunitySection from "@/components/community-section"
@@ -12,7 +12,7 @@ import CommunityTestimonialsSection from "@/components/community-testimonials-se
 import ContactCollaborateSection from "@/components/contact-collaborate-section"
 import JournalSection from "@/components/journal-section"
 import AufgussVideoSection from "@/components/aufguss-video-section"
-import Footer from "@/components/footer"
+import { Footer } from "@/components/footer"
 
 export default function Home() {
   return (

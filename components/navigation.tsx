@@ -5,7 +5,7 @@ import { Search, User, Menu, X } from "lucide-react"
 import { BathhouseLogoBlack } from "./logo"
 import { useState } from "react"
 
-export default function Navigation() {
+export function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
 
   const navItems = [

@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { BathhouseLogoWhite } from "./logo"
 
-export default function Footer() {
+export function Footer() {
   return (
     <footer className="bg-black text-white">
       <div className="bathhouse-container py-12">
