@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Journal Posts
+model JournalPost {
+  id         Int       @id @default(autoincrement())
+  slug       String    @unique
+  title      String
+  excerpt    String
+  date       DateTime
+  readTime   String
+  categories String    // JSON array stored as string
+  authorName String
+  authorAvatar String
+  image      String
+  imageAlt   String
+  content    String    // HTML content
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+// Events
+model Event {
+  id          Int      @id @default(autoincrement())
+  slug        String   @unique
+  title       String
+  category    String
+  description String
+  image       String
+  date        DateTime
+  time        String
+  location    String
+  capacity    Int
+  price       Float
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Page Content
+model PageContent {
+  id            String   @id @default(uuid())
+  page          String
+  section       String
+  title         String?
+  subtitle      String?
+  content       String   // JSON content stored as string
+  backgroundImage String?
+  overlayOpacity Float?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// Rituals
+model Ritual {
+  id                String   @id @default(uuid())
+  slug              String   @unique
+  title             String
+  category          String
+  shortDescription  String
+  fullDescription   String
+  duration          String
+  price             Float
+  capacity          Int
+  benefits          String   // JSON array stored as string
+  whatToExpect      String   // JSON array stored as string
+  whoIsItFor        String   // JSON array stored as string
+  contraindications String   // JSON array stored as string
+  image             String
+  imageAlt          String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+// Standalone Pages
+model StandalonePage {
+  id             String   @id @default(uuid())
+  slug           String   @unique
+  title          String
+  metaDescription String?
+  hero           String?  // JSON stored as string
+  sections       String?  // JSON stored as string
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
