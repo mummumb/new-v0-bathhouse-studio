@@ -20,6 +20,11 @@ const interTight = Inter_Tight({
   preload: true,
 })
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ||
+  `http://localhost:${process.env.PORT || 3000}`
+
 export const metadata: Metadata = {
   title: {
     default: "Bathhouse Studio | Stress-Resilience Rituals by Amanda Berger",
@@ -41,17 +46,17 @@ export const metadata: Metadata = {
     "recovery",
     "nervous system",
   ],
-  authors: [{ name: "Amanda Berger", url: "https://bathhousestudio.com" }],
+  authors: [{ name: "Amanda Berger", url: siteUrl }],
   creator: "Amanda Berger",
   publisher: "Bathhouse Studio",
-  metadataBase: new URL("https://bathhousestudio.com"),
+  metadataBase: new URL(siteUrl),
   alternates: {
     canonical: "/",
   },
   openGraph: {
     type: "website",
     locale: "en_AU",
-    url: "https://bathhousestudio.com",
+    url: siteUrl,
     title: "Bathhouse Studio | Stress-Resilience Rituals by Amanda Berger",
     description:
       "Contemporary approaches to ancient sauna and breathwork traditions. Transformative wellness experiences in Melbourne, Australia.",
@@ -83,7 +88,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: "your-google-verification-code",
+    google: process.env.GOOGLE_VERIFICATION,
   },
     generator: 'v0.dev'
 }
@@ -103,8 +108,8 @@ const structuredData = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "Bathhouse Studio",
-  url: "https://bathhousestudio.com",
-  logo: "https://bathhousestudio.com/images/bathhouse-logo-black.png",
+  url: siteUrl,
+  logo: `${siteUrl}/images/bathhouse-logo-black.png`,
   description: "Contemporary approaches to ancient sauna and breathwork traditions",
   founder: {
     "@type": "Person",
