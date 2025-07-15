@@ -1,1 +1,58 @@
-[]
+[
+  {
+    "id": 1,
+    "title": "Aufguss: A Sauna Ritual",
+    "slug": "aufguss-a-sauna-ritual",
+    "description": "Experience the transformative power of traditional German sauna ceremony. Amanda guides you through waves of heat, aromatherapy, and mindful breathing in this immersive wellness ritual.",
+    "date": "2024-11-15",
+    "time": "4:00 PM - 7:00 PM",
+    "location": "Melbourne Studio",
+    "price": 85,
+    "capacity": 12,
+    "image": "/images/ritual-amanda-aufguss.jpeg",
+    "isPublished": true,
+    "category": "Sauna"
+  },
+  {
+    "id": 2,
+    "title": "Cold Water Immersion",
+    "slug": "cold-water-immersion",
+    "description": "Awaken your body's natural resilience through guided cold exposure. This practice combines breathwork with cold water therapy to boost circulation, reduce inflammation, and enhance mental clarity.",
+    "date": "2024-11-22",
+    "time": "7:00 AM - 8:30 AM",
+    "location": "Outdoor Location",
+    "price": 65,
+    "capacity": 8,
+    "image": "/images/ritual-cold-plunge.jpeg",
+    "isPublished": true,
+    "category": "Cold Therapy"
+  },
+  {
+    "id": 3,
+    "title": "Breathwork & Stillness",
+    "slug": "breathwork-and-stillness",
+    "description": "Where sound becomes stillness. Join us in November for a meditative ritual inviting you to lie back, close your eyes, and be gently held by waves of sound. Using gongs, bowls and harmonic tones, the Master creates a space where tension dissolves and your nervous system can deeply settle.",
+    "date": "2024-11-09",
+    "time": "6:00 PM - 8:00 PM",
+    "location": "Melbourne Studio",
+    "price": 40,
+    "capacity": 20,
+    "image": "/images/ritual-community.jpeg",
+    "isPublished": true,
+    "category": "Mindfulness"
+  },
+  {
+    "id": 4,
+    "title": "Community Hot Plunge",
+    "slug": "community-hot-plunge",
+    "description": "A communal wellness experience combining sauna, hot springs therapy, and group reflection. Connect with like-minded individuals while nourishing your body and spirit.",
+    "date": "2024-12-01",
+    "time": "5:00 PM - 8:00 PM",
+    "location": "Melbourne Studio",
+    "price": 75,
+    "capacity": 16,
+    "image": "/images/ritual-immersion.jpeg",
+    "isPublished": true,
+    "category": "Community"
+  }
+]

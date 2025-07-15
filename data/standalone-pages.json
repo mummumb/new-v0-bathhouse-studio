@@ -1,1 +1,24 @@
-[]
+[
+  {
+    "id": "privacy-policy",
+    "title": "Privacy Policy",
+    "slug": "privacy-policy",
+    "content": "<h1>Privacy Policy</h1><p>Last updated: January 15, 2024</p><h2>Information We Collect</h2><p>We collect information you provide directly to us, such as when you book a session, sign up for our newsletter, or contact us.</p><h2>How We Use Your Information</h2><p>We use the information we collect to provide, maintain, and improve our services, process bookings, and communicate with you.</p><h2>Information Sharing</h2><p>We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except as described in this policy.</p><h2>Contact Us</h2><p>If you have any questions about this Privacy Policy, please contact us at privacy@bathhousestudio.com</p>",
+    "metaTitle": "Privacy Policy | Bathhouse Studio",
+    "metaDescription": "Learn about how Bathhouse Studio collects, uses, and protects your personal information.",
+    "status": "published",
+    "createdAt": "2024-01-15T00:00:00.000Z",
+    "updatedAt": "2024-01-15T00:00:00.000Z"
+  },
+  {
+    "id": "terms-of-service",
+    "title": "Terms of Service",
+    "slug": "terms-of-service", 
+    "content": "<h1>Terms of Service</h1><p>Last updated: January 15, 2024</p><h2>Acceptance of Terms</h2><p>By accessing and using Bathhouse Studio services, you accept and agree to be bound by the terms and provision of this agreement.</p><h2>Booking and Cancellation Policy</h2><p>Bookings must be cancelled at least 24 hours in advance for a full refund. Cancellations within 24 hours are subject to a 50% cancellation fee.</p><h2>Health and Safety</h2><p>Participants must disclose any health conditions that may affect their ability to safely participate in our wellness programs.</p><h2>Contact Information</h2><p>For questions about these terms, contact us at hello@bathhousestudio.com</p>",
+    "metaTitle": "Terms of Service | Bathhouse Studio",
+    "metaDescription": "Read the terms and conditions for using Bathhouse Studio services.",
+    "status": "published",
+    "createdAt": "2024-01-15T00:00:00.000Z",
+    "updatedAt": "2024-01-15T00:00:00.000Z"
+  }
+]

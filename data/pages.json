@@ -1,1 +1,35 @@
-[]
+[
+  {
+    "id": "aufguss-ritual-section",
+    "title": "Aufguss Ritual Section",
+    "content": {
+      "heading": "The Aufguss Ritual",
+      "subheading": "A transformative German sauna ceremony that elevates heat into healing through aromatherapy, music, and the masterful art of towel waving.",
+      "master_knows_heading": "The Master Knows"
+    },
+    "section": "home-aufguss",
+    "lastUpdated": "2024-01-15T00:00:00.000Z"
+  },
+  {
+    "id": "hero-section",
+    "title": "Hero Section",
+    "content": {
+      "heading": "Enter the Ritual",
+      "subheading": "Where ancient wellness meets modern life. Amanda Berger guides transformative experiences through sauna, breathwork, and sound.",
+      "cta_text": "Begin Your Journey"
+    },
+    "section": "home-hero",
+    "lastUpdated": "2024-01-15T00:00:00.000Z"
+  },
+  {
+    "id": "about-section",
+    "title": "About Section", 
+    "content": {
+      "heading": "Sacred Space for Modern Life",
+      "description": "Bathhouse Studio is more than a wellness space—it's a sanctuary for transformation. Through carefully curated rituals rooted in ancient traditions, we create experiences that honor both individual healing and community connection.",
+      "mission": "Our mission is to make profound wellness practices accessible, authentic, and transformative for modern life."
+    },
+    "section": "home-about",
+    "lastUpdated": "2024-01-15T00:00:00.000Z"
+  }
+]
