@@ -30,3 +30,5 @@ next-env.d.ts
 # database
 /backups/
 *.db-journal
+
+✔ Generated Prisma Client (v6.11.1) to ./lib/generated/prisma in 75ms

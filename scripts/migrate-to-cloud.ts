@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
-import { PrismaClient as LocalPrismaClient } from '../lib/generated/prisma'
-import { PrismaClient as CloudPrismaClient } from '@prisma/client'
+import { PrismaClient as LocalPrismaClient, Prisma } from '../lib/generated/prisma'
+import { PrismaClient as CloudPrismaClient } from '../lib/generated/prisma'
 import dotenv from 'dotenv'
 
 // Load environment variables
@@ -68,8 +68,14 @@ async function migrateToCloud() {
 
     // Migrate journal posts
     if (journalPosts.length > 0) {
+      // Ensure categories is compatible with Prisma.InputJsonValue
+      const { Prisma } = await import('../lib/generated/prisma')
+      const safeJournalPosts = journalPosts.map((post: any) => ({
+        ...post,
+        categories: post.categories as Prisma.JsonValue
+      }))
       await cloudDb.journalPost.createMany({
-        data: journalPosts
+        data: safeJournalPosts
       })
     }
 
