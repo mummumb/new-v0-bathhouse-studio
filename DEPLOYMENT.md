@@ -10,9 +10,7 @@
 - [ ] Update event dates and information
 
 ### 2. SEO & Analytics
-- [ ] Add Google verification code to `app/layout.tsx`
 - [ ] Configure Google Analytics (if needed)
-- [ ] Update `metadataBase` URL in layout
 - [ ] Verify structured data markup
 - [ ] Test social media previews
 
