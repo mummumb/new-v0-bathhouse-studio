@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       id: 0, // Will be auto-generated in saveEvent
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      published: newEvent.published ?? false,
+      isPublished: newEvent.isPublished ?? false,
     }
 
     const savedEvent = await saveEvent(eventData as Event)

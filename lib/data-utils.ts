@@ -180,7 +180,7 @@ export async function getRitualBySlug(slug: string): Promise<Ritual | null> {
 
 export async function getRitualById(id: string): Promise<Ritual | null> {
   const rituals = await getRituals()
-  return rituals.find((ritual) => ritual.id === id) || null
+  return rituals.find((ritual) => ritual.id.toString() === id) || null
 }
 
 export async function saveRituals(rituals: Ritual[]): Promise<void> {
@@ -203,7 +203,7 @@ export async function saveRitual(ritual: Ritual): Promise<Ritual> {
 
 export async function deleteRitual(id: string): Promise<boolean> {
   const rituals = await getRituals()
-  const filteredRituals = rituals.filter(ritual => ritual.id !== id)
+  const filteredRituals = rituals.filter(ritual => ritual.id.toString() !== id)
   if (filteredRituals.length !== rituals.length) {
     await saveRituals(filteredRituals)
     return true
@@ -223,7 +223,7 @@ export async function getStandalonePageBySlug(slug: string): Promise<StandaloneP
 
 export async function getStandalonePageById(id: string): Promise<StandalonePage | null> {
   const pages = await getStandalonePages()
-  return pages.find((page) => page.id === id) || null
+  return pages.find((page) => page.id.toString() === id) || null
 }
 
 export async function saveStandalonePages(pages: StandalonePage[]): Promise<void> {
@@ -246,7 +246,7 @@ export async function saveStandalonePage(page: StandalonePage): Promise<Standalo
 
 export async function deleteStandalonePage(id: string): Promise<boolean> {
   const pages = await getStandalonePages()
-  const filteredPages = pages.filter(page => page.id !== id)
+  const filteredPages = pages.filter(page => page.id.toString() !== id)
   if (filteredPages.length !== pages.length) {
     await saveStandalonePages(filteredPages)
     return true

@@ -5,7 +5,8 @@
     "content": {
       "heading": "The Aufguss Ritual",
       "subheading": "A transformative German sauna ceremony that elevates heat into healing through aromatherapy, music, and the masterful art of towel waving.",
-      "master_knows_heading": "The Master Knows"
+      "master_knows_heading": "The Master Knows",
+      "description": "In the hands of a skilled Aufguss Master, every element becomes intentional. From the selection of essential oils to the rhythm of the towel work, each session is a carefully choreographed experience designed to guide you through waves of sensation and renewal."
     },
     "section": "home-aufguss",
     "lastUpdated": "2024-01-15T00:00:00.000Z"
@@ -16,7 +17,8 @@
     "content": {
       "heading": "Enter the Ritual",
       "subheading": "Where ancient wellness meets modern life. Amanda Berger guides transformative experiences through sauna, breathwork, and sound.",
-      "cta_text": "Begin Your Journey"
+      "cta_text": "Begin Your Journey",
+      "description": "At Bathhouse Studio, we create sacred space for the modern world. Through carefully curated rituals rooted in ancient traditions, we offer a sanctuary for transformation, healing, and community."
     },
     "section": "home-hero",
     "lastUpdated": "2024-01-15T00:00:00.000Z"
@@ -27,9 +29,51 @@
     "content": {
       "heading": "Sacred Space for Modern Life",
       "description": "Bathhouse Studio is more than a wellness space—it's a sanctuary for transformation. Through carefully curated rituals rooted in ancient traditions, we create experiences that honor both individual healing and community connection.",
-      "mission": "Our mission is to make profound wellness practices accessible, authentic, and transformative for modern life."
+      "mission": "Our mission is to make profound wellness practices accessible, authentic, and transformative for modern life.",
+      "values": [
+        "Authentic traditional practices",
+        "Inclusive community building", 
+        "Nervous system restoration",
+        "Mindful presence"
+      ]
     },
     "section": "home-about",
+    "lastUpdated": "2024-01-15T00:00:00.000Z"
+  },
+  {
+    "id": "services-section",
+    "title": "Services Section",
+    "content": {
+      "heading": "Wellness Experiences",
+      "subheading": "From traditional sauna rituals to guided breathwork, each experience is designed to restore, reset, and reconnect.",
+      "cta_text": "Explore Services"
+    },
+    "section": "home-services",
+    "lastUpdated": "2024-01-15T00:00:00.000Z"
+  },
+  {
+    "id": "community-section",
+    "title": "Community Section",
+    "content": {
+      "heading": "Join Our Community",
+      "description": "Connect with like-minded individuals on a journey of wellness and self-discovery. Our community values authentic connection, mutual support, and shared growth.",
+      "newsletter_heading": "Stay Connected",
+      "newsletter_description": "Receive early access to events, wellness tips, and Amanda's reflections on ritual and community."
+    },
+    "section": "home-community",
+    "lastUpdated": "2024-01-15T00:00:00.000Z"
+  },
+  {
+    "id": "contact-section",
+    "title": "Contact Section",
+    "content": {
+      "heading": "Connect With Us",
+      "description": "Ready to begin your wellness journey? Have questions about our offerings? We're here to guide you.",
+      "email": "hello@bathhousestudio.com",
+      "phone": "+61 3 9123 4567",
+      "address": "123 Wellness Lane, Melbourne VIC 3000"
+    },
+    "section": "home-contact",
     "lastUpdated": "2024-01-15T00:00:00.000Z"
   }
 ]
