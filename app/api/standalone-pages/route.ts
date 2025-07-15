@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     const newPage: Omit<StandalonePage, "id"> & { id?: string } = await request.json()
 
     // Generate ID if not provided
-    const pageId = newPage.id || `page-${Date.now()}`
+    const pageId = newPage.id || Date.now()
 
     // Add default values
     const pageData = {
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
       id: pageId,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      published: newPage.published ?? false,
+      isPublished: newPage.isPublished ?? false,
     }
 
     const savedPage = await saveStandalonePage(pageData as StandalonePage)

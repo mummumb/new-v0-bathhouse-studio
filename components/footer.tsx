@@ -66,6 +66,15 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-500">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-4">
+            <Link href="/p/privacy-policy" className="hover:text-white transition-colors bathhouse-link">
+              Privacy Policy
+            </Link>
+            <span className="hidden sm:inline">•</span>
+            <Link href="/p/terms-of-service" className="hover:text-white transition-colors bathhouse-link">
+              Terms of Service
+            </Link>
+          </div>
           <p>&copy; 2024 Bathhouse Studio. All rights reserved.</p>
         </div>
       </div>

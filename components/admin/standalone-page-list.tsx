@@ -29,8 +29,8 @@ export default function StandalonePageList({ pages, onEdit, onDelete, isDeleting
           <li key={page.id} className="p-4 flex justify-between items-center hover:bg-gray-50">
             <div>
               <span className="font-medium text-gray-800">{page.title}</span>
-              <Badge variant={page.status === "published" ? "default" : "secondary"} className="ml-2">
-                {page.status}
+              <Badge variant={page.isPublished ? "default" : "secondary"} className="ml-2">
+                {page.isPublished ? "published" : "draft"}
               </Badge>
               <p className="text-sm text-gray-500">/{page.slug}</p>
             </div>

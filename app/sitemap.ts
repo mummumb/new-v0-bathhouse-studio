@@ -1,8 +1,9 @@
 import type { MetadataRoute } from "next"
 import { journalPosts } from "@/lib/journal-data"
 import { events } from "@/lib/events-data"
+import { getStandalonePages } from "@/lib/data-utils"
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://bathhousestudio.com"
 
   // Static pages
@@ -37,5 +38,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }))
 
-  return [...staticPages, ...journalPages, ...ritualPages]
+  // Standalone pages
+  const standalonePages = await getStandalonePages()
+  const publishedStandalonePages = standalonePages
+    .filter(page => page.isPublished)
+    .map((page) => ({
+      url: `${baseUrl}/p/${page.slug}`,
+      lastModified: new Date(page.updatedAt),
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
+    }))
+
+  return [...staticPages, ...journalPages, ...ritualPages, ...publishedStandalonePages]
 }
