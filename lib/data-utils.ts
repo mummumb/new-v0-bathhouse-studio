@@ -2,6 +2,26 @@ import { prisma } from "./db"
 import type { JournalPost, Event, PageContent, Ritual, StandalonePage } from "./types"
 
 // Journal functions
+/**
+ * Retrieves all journal posts from the database, ordered by date in descending order.
+ *
+ * Each post is mapped to a normalized object, parsing the `categories` field from a JSON string to a string array,
+ * and formatting the `date` as an ISO string. The author information is grouped under an `author` object.
+ *
+ * @returns {Promise<JournalPost[]>} A promise that resolves to an array of journal post objects.
+ */
+/**
+ * Retrieves a list of journal posts from the database, ordered by date in descending order.
+ *
+ * Each journal post is mapped to a normalized object structure, including parsed categories,
+ * author information, and formatted date strings.
+ *
+ * @returns {Promise<JournalPost[]>} A promise that resolves to an array of journal post objects.
+ *
+ * @example
+ * const posts = await getJournalPosts();
+ * console.log(posts[0].title); // Outputs the title of the most recent journal post
+ */
 export async function getJournalPosts(): Promise<JournalPost[]> {
   const posts = await prisma.journalPost.findMany({
     orderBy: { date: 'desc' }
@@ -14,7 +34,14 @@ export async function getJournalPosts(): Promise<JournalPost[]> {
     excerpt: post.excerpt,
     date: post.date.toISOString(),
     readTime: post.readTime,
-    categories: JSON.parse(post.categories) as string[],
+    categories: (() => {
+      try {
+        if (!post.categories) return [];
+        return JSON.parse(post.categories) as string[];
+      } catch {
+        return [];
+      }
+    })(),
     author: {
       name: post.authorName,
       avatar: post.authorAvatar
@@ -39,7 +66,14 @@ export async function getJournalPostBySlug(slug: string): Promise<JournalPost | 
     excerpt: post.excerpt,
     date: post.date.toISOString(),
     readTime: post.readTime,
-    categories: JSON.parse(post.categories) as string[],
+    categories: (() => {
+      try {
+        if (!post.categories) return [];
+        return JSON.parse(post.categories) as string[];
+      } catch {
+        return [];
+      }
+    })(),
     author: {
       name: post.authorName,
       avatar: post.authorAvatar
@@ -89,30 +123,68 @@ export async function saveEvents(events: Event[]): Promise<void> {
 export async function getPageContent(): Promise<PageContent[]> {
   const pages = await prisma.pageContent.findMany()
   
-  return pages.map((page: { id: any; page: any; section: any; title: any; subtitle: any; content: string; backgroundImage: any; overlayOpacity: any }) => ({
-    id: page.id,
+    content: (() => {
+      try {
+        return JSON.parse(pages.content);
+      } catch {
+        return {};
+      }
+    content: (() => {
+      try {
+        return JSON.parse(pages.content);
+      } catch {
+        return {};
+      }
+    })(),
+    id: pages.id,
     page: page.page,
     section: page.section,
     title: page.title || undefined,
-    subtitle: page.subtitle || undefined,
-    content: JSON.parse(page.content),
+    content: (() => {
+      try {
+        if (!page.content) return {};
+        return JSON.parse(page.content);
+      } catch {
+        return {};
+      }
+    content: (() => {
+      try {
+        if (!page.content) return {};
+        return JSON.parse(page.content);
+      } catch {
+        return {};
+      }
+    })(),
+    content: (() => {
+      try {
+        return JSON.parse(page.content);
+      } catch {
+        return {};
+      }
+    })(),
     backgroundImage: page.backgroundImage || undefined,
     overlayOpacity: page.overlayOpacity || undefined
   }))
 }
 
 export async function getPageContentById(id: string): Promise<PageContent | null> {
-  const page = await prisma.pageContent.findUnique({
-    where: { id }
-  })
-  
-  if (!page) return null
-  
   return {
     id: page.id,
     page: page.page,
     section: page.section,
     title: page.title || undefined,
+    subtitle: page.subtitle || undefined,
+    content: (() => {
+      try {
+        return JSON.parse(page.content);
+      } catch {
+        return {};
+      }
+    })(),
+    backgroundImage: page.backgroundImage || undefined,
+    overlayOpacity: page.overlayOpacity || undefined
+  }
+}
     subtitle: page.subtitle || undefined,
     content: JSON.parse(page.content),
     backgroundImage: page.backgroundImage || undefined,
@@ -127,14 +199,142 @@ export async function savePageContent(pages: PageContent[]): Promise<void> {
 
 // Rituals functions
 export async function getRituals(): Promise<Ritual[]> {
-  const rituals = await prisma.ritual.findMany()
-  
-  return rituals.map((ritual: { id: any; slug: any; title: any; category: any; shortDescription: any; fullDescription: any; duration: any; price: any; capacity: any; benefits: string; whatToExpect: string; whoIsItFor: string; contraindications: string; image: any; imageAlt: any }) => ({
-    id: ritual.id,
-    slug: ritual.slug,
-    title: ritual.title,
-    category: ritual.category,
-    shortDescription: ritual.shortDescription,
+    benefits: (() => {
+      try {
+        return JSON.parse(ritual.benefits) as string[];
+      } catch {
+        return [];
+      }
+    })(),
+    whatToExpect: (() => {
+      try {
+        return JSON.parse(ritual.whatToExpect) as string[];
+      } catch {
+        return [];
+      }
+    })(),
+    whoIsItFor: (() => {
+      try {
+        return JSON.parse(ritual.whoIsItFor) as string[];
+      } catch {
+        return [];
+      }
+    })(),
+    contraindications: (() => {
+      try {
+        return JSON.parse(ritual.contraindications) as string[];
+    benefits: (() => {
+      try {
+        return JSON.parse(ritual.benefits) as string[];
+      } catch {
+        return [];
+      }
+    })(),
+    whatToExpect: (() => {
+      try {
+        return JSON.parse(ritual.whatToExpect) as string[];
+      } catch {
+        return [];
+      }
+    })(),
+    whoIsItFor: (() => {
+      try {
+        return JSON.parse(ritual.whoIsItFor) as string[];
+      } catch {
+        return [];
+      }
+    })(),
+    contraindications: (() => {
+      try {
+        return JSON.parse(ritual.contraindications) as string[];
+      } catch {
+        return [];
+      }
+    })(),
+    benefits: (() => {
+      try {
+        if (!ritual.benefits) return [];
+        return JSON.parse(ritual.benefits) as string[];
+      } catch {
+        return [];
+      }
+    })(),
+    whatToExpect: (() => {
+      try {
+        if (!ritual.whatToExpect) return [];
+        return JSON.parse(ritual.whatToExpect) as string[];
+      } catch {
+        return [];
+      }
+    })(),
+    whoIsItFor: (() => {
+      try {
+        if (!ritual.whoIsItFor) return [];
+        return JSON.parse(ritual.whoIsItFor) as string[];
+      } catch {
+        return [];
+      }
+    })(),
+    contraindications: (() => {
+      try {
+        if (!ritual.contraindications) return [];
+        return JSON.parse(ritual.contraindications) as string[];
+    benefits: (() => {
+      try {
+        if (!ritual.benefits) return [];
+        return JSON.parse(ritual.benefits) as string[];
+      } catch {
+        return [];
+      }
+    })(),
+    whatToExpect: (() => {
+      try {
+        if (!ritual.whatToExpect) return [];
+        return JSON.parse(ritual.whatToExpect) as string[];
+      } catch {
+        return [];
+      }
+    })(),
+    whoIsItFor: (() => {
+      try {
+        if (!ritual.whoIsItFor) return [];
+        return JSON.parse(ritual.whoIsItFor) as string[];
+      } catch {
+        return [];
+      }
+    })(),
+    benefits: (() => {
+      try {
+        return JSON.parse(ritual.benefits) as string[];
+      } catch {
+        return [];
+      }
+    })(),
+    whatToExpect: (() => {
+      try {
+        return JSON.parse(ritual.whatToExpect) as string[];
+      } catch {
+        return [];
+      }
+    })(),
+    whoIsItFor: (() => {
+      try {
+        return JSON.parse(ritual.whoIsItFor) as string[];
+      } catch {
+        return [];
+      }
+    })(),
+    contraindications: (() => {
+      try {
+        return JSON.parse(ritual.contraindications) as string[];
+      } catch {
+        return [];
+      }
+    })(),
+    image: ritual.image,
+    imageAlt: ritual.imageAlt
+  }))
+}
     fullDescription: ritual.fullDescription,
     duration: ritual.duration,
     price: ritual.price,
@@ -152,8 +352,116 @@ export async function getRitualBySlug(slug: string): Promise<Ritual | null> {
   const ritual = await prisma.ritual.findUnique({
     where: { slug }
   })
-  
-  if (!ritual) return null
+    hero: (() => {
+      if (!page.hero) return undefined;
+      try {
+        return JSON.parse(page.hero);
+      } catch {
+        return undefined;
+      }
+    })(),
+    sections: (() => {
+      if (!page.sections) return [];
+      try {
+        return JSON.parse(page.sections);
+      } catch {
+        return [];
+    hero: (() => {
+      if (!page.hero) return undefined;
+      try {
+        return JSON.parse(page.hero);
+      } catch {
+        return undefined;
+      }
+    })(),
+    sections: (() => {
+  return {
+    id: ritual.id,
+    slug: ritual.slug,
+    title: ritual.title,
+    category: ritual.category,
+    shortDescription: ritual.shortDescription,
+    fullDescription: ritual.fullDescription,
+    duration: ritual.duration,
+    price: ritual.price,
+    capacity: ritual.capacity,
+    benefits: (() => {
+      try {
+        return JSON.parse(ritual.benefits) as string[];
+      } catch {
+        return [];
+      }
+    })(),
+    whatToExpect: (() => {
+      try {
+        return JSON.parse(ritual.whatToExpect) as string[];
+      } catch {
+        return [];
+      }
+    })(),
+    whoIsItFor: (() => {
+      try {
+        return JSON.parse(ritual.whoIsItFor) as string[];
+      } catch {
+  return pages.map((page: { id: any; slug: any; title: any; metaDescription: any; hero: string; sections: string }) => ({
+    id: page.id,
+    slug: page.slug,
+    title: page.title,
+    metaDescription: page.metaDescription || undefined,
+    hero: (() => {
+      if (!page.hero) return undefined;
+      try {
+        return JSON.parse(page.hero);
+      } catch {
+        return undefined;
+      }
+    })(),
+    sections: (() => {
+      if (!page.sections) return [];
+      try {
+        return JSON.parse(page.sections);
+  return {
+    id: page.id,
+    slug: page.slug,
+    title: page.title,
+    metaDescription: page.metaDescription || undefined,
+    hero: (() => {
+      if (!page.hero) return undefined;
+      try {
+        return JSON.parse(page.hero);
+      } catch {
+        return undefined;
+      }
+    })(),
+    sections: (() => {
+      if (!page.sections) return [];
+      try {
+        return JSON.parse(page.sections);
+      } catch {
+        return [];
+      }
+    })()
+  }
+}
+  }
+}
+        return [];
+    hero: (() => {
+      try {
+        if (!page.hero) return undefined;
+        return JSON.parse(page.hero);
+      } catch {
+        return undefined;
+      }
+    })(),
+    sections: (() => {
+      try {
+        if (!page.sections) return [];
+        return JSON.parse(page.sections);
+      } catch {
+        return [];
+      }
+    })()
   
   return {
     id: ritual.id,
