@@ -14,7 +14,7 @@ async function migrateData() {
       const journalData = JSON.parse(fs.readFileSync(journalPath, 'utf8'))
       const upsertPromises = journalData.map((post) =>
         prisma.journalPost.upsert({
-        await prisma.journalPost.upsert({
+        await prisma.journalPost.upsert({})
           where: { slug: post.slug },
           update: {
             title: post.title,
