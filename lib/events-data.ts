@@ -91,11 +91,8 @@ export const events = rawEvents.map((event) => {
     pricePerPerson: "per person",
     instructor: {
       name: "Amanda Berger",
-      title: event.category === "Sauna" ? "Founder & Certified Aufguss Master" : "Founder & Sound Healing Practitioner",
-      bio:
-        event.category === "Sauna"
-          ? "With over 17 years of experience in wellness and movement, Amanda brings authentic European sauna traditions to Australia. As one of Australia's first certified Aufguss Masters, her passion is creating inclusive, transformative experiences that honor ancient practices while welcoming all levels of experience."
-          : "Amanda's sound healing practice draws from years of studying vibrational medicine and its effects on the nervous system. She creates deeply restorative experiences using traditional instruments and modern sound healing techniques.",
+      title: "Founder & Certified Aufguss Master",
+      bio: "For nearly two decades, Amanda was the go-to for all things fitness. But after having two children and staying true to her belief that balance is the key to lasting success, she shifted her focus toward wellness. Forty-two saunas across five countries later (and still counting), Amanda has become one of Australia’s first certified Aufguss Masters, guiding others in the art of sauna done right. With Bathhouse Studio set to open in 2026 and a growing calendar of interstate events, Amanda is building Australia’s sauna culture, one ritual at a time.",
       image: "/images/amanda-berger-headshot.jpeg",
     },
     schedule:
@@ -202,7 +199,7 @@ export const services = rawServices.map((service) => {
     instructor: {
       name: "Amanda Berger",
       title: "Founder & Wellness Expert",
-      bio: "Amanda brings over 17 years of experience in wellness and movement, creating transformative experiences that honor traditional practices while welcoming all levels of experience.",
+      bio: "For nearly two decades, Amanda was the go-to for all things fitness. But after having two children and staying true to her belief that balance is the key to lasting success, she shifted her focus toward wellness. Forty-two saunas across five countries later (and still counting), Amanda has become one of Australia’s first certified Aufguss Masters, guiding others in the art of sauna done right. With Bathhouse Studio set to open in 2026 and a growing calendar of interstate events, Amanda is building Australia’s sauna culture, one ritual at a time.",
       image: "/images/amanda-berger-headshot.jpeg",
     },
   }
@@ -218,7 +215,7 @@ export const rituals = [
     description:
       "In this guided ritual, breath becomes your anchor, a gentle yet powerful tool for shifting energy, settling the nervous system, and reconnecting to what matters. Whether you arrive with stress, fatigue, or curiosity, this practice will meet you where you are.",
     fullDescription:
-      "No performance. No pressure. Just space to slow down, listen in, and breathe with intention. Each session is layered with rhythm, stillness and presence, a chance to let go, drop in, and return to yourself.",
+      "No performance. No pressure. Just space to slow down, listen in, and breathe with intention. Each session is layered with rhythm, stillness and presence,  a chance to let go, drop in, and return to yourself.",
     image: "/images/ritual-immersion.jpeg",
     imageAlt: "A person sitting peacefully by the water, embodying the stillness achieved through breathwork.",
     date: "Weekly Sessions",
