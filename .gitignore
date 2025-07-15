@@ -25,3 +25,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+/lib/generated/prisma
+
+# database
+/backups/
+*.db-journal
+
+✔ Generated Prisma Client (v6.11.1) to ./lib/generated/prisma in 75ms

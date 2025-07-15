@@ -2,6 +2,8 @@ import { NextResponse } from "next/server"
 import { getStandalonePages, saveStandalonePages } from "@/lib/data-utils"
 import type { StandalonePage } from "@/lib/types"
 
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   try {
     const pages = await getStandalonePages()
