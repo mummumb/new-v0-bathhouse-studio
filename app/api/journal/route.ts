@@ -3,28 +3,33 @@ import { prisma } from "@/lib/db"
 
 export const dynamic = 'force-dynamic'
 
+// Helper to format a journal post from DB to API response
+function formatJournalPost(post: any) {
+  return {
+    id: post.id,
+    slug: post.slug,
+    title: post.title,
+    excerpt: post.excerpt,
+    date: post.date instanceof Date ? post.date.toISOString() : post.date,
+    readTime: post.readTime,
+    categories: typeof post.categories === 'string' ? JSON.parse(post.categories) : post.categories,
+    author: {
+      name: post.authorName,
+      avatar: post.authorAvatar
+    },
+    image: post.image,
+    imageAlt: post.imageAlt,
+    content: post.content
+  }
+}
+
 export async function GET() {
   try {
     const posts = await prisma.journalPost.findMany({
       orderBy: { date: 'desc' }
     })
     // Parse categories back to array and format response
-    const formattedPosts = posts.map(post => ({
-      id: post.id,
-      slug: post.slug,
-      title: post.title,
-      excerpt: post.excerpt,
-      date: post.date.toISOString(),
-      readTime: post.readTime,
-      categories: JSON.parse(post.categories),
-      author: {
-        name: post.authorName,
-        avatar: post.authorAvatar
-      },
-      image: post.image,
-      imageAlt: post.imageAlt,
-      content: post.content
-    }))
+    const formattedPosts = posts.map(formatJournalPost)
     return NextResponse.json(formattedPosts)
   } catch (error) {
     console.error('Failed to fetch journal posts:', error)

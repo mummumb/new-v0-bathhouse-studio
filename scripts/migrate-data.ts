@@ -1,6 +1,7 @@
 import { prisma } from '../lib/db'
 import fs from 'fs'
 import path from 'path'
+import crypto from 'crypto'
 
 async function migrateData() {
   console.log('Starting data migration...')
@@ -11,8 +12,8 @@ async function migrateData() {
     const journalPath = path.join(process.cwd(), 'data', 'journal.json')
     if (fs.existsSync(journalPath)) {
       const journalData = JSON.parse(fs.readFileSync(journalPath, 'utf8'))
-      
-      for (const post of journalData) {
+      const upsertPromises = journalData.map((post) =>
+        prisma.journalPost.upsert({
         await prisma.journalPost.upsert({
           where: { slug: post.slug },
           update: {
@@ -141,10 +142,12 @@ async function migrateData() {
             image: ritual.image,
             imageAlt: ritual.imageAlt || '',
           },
-          create: {
-            id: ritual.id?.toString() || ritual.slug,
+            id: typeof ritual.id === 'string' && /^[0-9a-fA-F-]{36}$/.test(ritual.id)
+              ? ritual.id
+              : crypto.randomUUID(),
             slug: ritual.slug,
             title: ritual.title,
+            category: 'Wellness', // Default category
             category: 'Wellness', // Default category
             shortDescription: ritual.description || ritual.subtitle || '',
             fullDescription: ritual.fullDescription || ritual.description || '',
@@ -176,10 +179,12 @@ async function migrateData() {
             title: page.title,
             metaDescription: page.metaDescription || null,
             hero: JSON.stringify(page.hero || null),
-            sections: JSON.stringify(page.sections || []),
-          },
-          create: {
-            id: page.id?.toString() || page.slug,
+            id: typeof page.id === 'string' && /^[0-9a-fA-F-]{36}$/.test(page.id)
+              ? page.id
+              : crypto.randomUUID(),
+            slug: page.slug,
+            title: page.title,
+            metaDescription: page.metaDescription || null,
             slug: page.slug,
             title: page.title,
             metaDescription: page.metaDescription || null,

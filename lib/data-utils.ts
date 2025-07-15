@@ -7,7 +7,7 @@ export async function getJournalPosts(): Promise<JournalPost[]> {
     orderBy: { date: 'desc' }
   })
   
-  return posts.map(post => ({
+  return posts.map((post: { id: any; slug: any; title: any; excerpt: any; date: { toISOString: () => any }; readTime: any; categories: string; authorName: any; authorAvatar: any; image: any; imageAlt: any; content: any }) => ({
     id: post.id,
     slug: post.slug,
     title: post.title,
@@ -61,7 +61,7 @@ export async function getEvents(): Promise<Event[]> {
     orderBy: { date: 'asc' }
   })
   
-  return events.map(event => ({
+  return events.map((event: { date: { toISOString: () => any } }) => ({
     ...event,
     date: event.date.toISOString()
   }))
@@ -89,7 +89,7 @@ export async function saveEvents(events: Event[]): Promise<void> {
 export async function getPageContent(): Promise<PageContent[]> {
   const pages = await prisma.pageContent.findMany()
   
-  return pages.map(page => ({
+  return pages.map((page: { id: any; page: any; section: any; title: any; subtitle: any; content: string; backgroundImage: any; overlayOpacity: any }) => ({
     id: page.id,
     page: page.page,
     section: page.section,
@@ -129,7 +129,7 @@ export async function savePageContent(pages: PageContent[]): Promise<void> {
 export async function getRituals(): Promise<Ritual[]> {
   const rituals = await prisma.ritual.findMany()
   
-  return rituals.map(ritual => ({
+  return rituals.map((ritual: { id: any; slug: any; title: any; category: any; shortDescription: any; fullDescription: any; duration: any; price: any; capacity: any; benefits: string; whatToExpect: string; whoIsItFor: string; contraindications: string; image: any; imageAlt: any }) => ({
     id: ritual.id,
     slug: ritual.slug,
     title: ritual.title,
@@ -183,7 +183,7 @@ export async function saveRituals(rituals: Ritual[]): Promise<void> {
 export async function getStandalonePages(): Promise<StandalonePage[]> {
   const pages = await prisma.standalonePage.findMany()
   
-  return pages.map(page => ({
+  return pages.map((page: { id: any; slug: any; title: any; metaDescription: any; hero: string; sections: string }) => ({
     id: page.id,
     slug: page.slug,
     title: page.title,

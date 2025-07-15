@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/db"
+import { Prisma } from "@prisma/client"
 
 export const dynamic = 'force-dynamic'
 
@@ -50,7 +51,13 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
       where: { id: parseInt(params.id) }
     })
     return NextResponse.json({ message: "Event deleted" }, { status: 200 })
-  } catch (error) {
+  } catch (error: unknown) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      (error as Prisma.PrismaClientKnownRequestError).code === 'P2025'
+    ) {
+      return NextResponse.json({ error: 'Event not found' }, { status: 404 })
+    }
     console.error('Failed to delete event:', error)
     return NextResponse.json({ error: 'Failed to delete event' }, { status: 500 })
   }

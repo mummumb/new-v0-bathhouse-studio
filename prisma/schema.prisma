@@ -19,7 +19,7 @@ model JournalPost {
   excerpt    String
   date       DateTime
   readTime   String
-  categories String    // JSON array stored as string
+  categories Json    // JSON array
   authorName String
   authorAvatar String
   image      String
