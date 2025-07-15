@@ -4,7 +4,11 @@ import { execSync } from 'child_process'
 console.log('🚀 Setting up Supabase database...\n')
 
 // Supabase connection details
-const password = 'xZBy*gG2FY?yhtf'
+const password = process.env.SUPABASE_PASSWORD
+if (!password) {
+  console.error('❌ SUPABASE_PASSWORD environment variable not set.')
+  process.exit(1)
+}
 const encodedPassword = encodeURIComponent(password)
 const host = 'db.uadfxqzxmusvpdohpark.supabase.co'
 const port = '5432'
