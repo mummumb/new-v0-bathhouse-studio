@@ -3,9 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "next build",
     "dev": "next dev",
-    "lint": "next lint",
+    "build": "next build",
     "start": "next start"
   },
   "dependencies": {
@@ -37,10 +36,6 @@
     "@radix-ui/react-toggle": "^1.0.7",
     "@radix-ui/react-toggle-group": "^1.0.7",
     "@radix-ui/react-tooltip": "^1.1.2",
-    "@remix-run/react": "^2.8.1",
-    "@sveltejs/kit": "^1.40.2",
-    "@tailwindcss/typography": "^0.5.13",
-    "@tanstack/react-query": "^4.36.1",
     "@tiptap/extension-image": "^2.26.1",
     "@vercel/analytics": "^1.2.2",
     "autoprefixer": "^10.4.21",
@@ -53,7 +48,6 @@
     "lucide-react": "^0.454.0",
     "next": "14.2.16",
     "next-themes": "^0.2.0",
-    "path": "^0.12.7",
     "react": "^18.2.0",
     "react-day-picker": "^9.2.7",
     "react-dom": "^18.2.0",
@@ -61,20 +55,19 @@
     "react-resizable-panels": "^2.0.0",
     "recharts": "^2.9.2",
     "sonner": "^1.4.0",
-    "svelte": "^4.2.17",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.17.0",
-    "vue": "^3.4.21",
-    "vue-router": "^4.3.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/node": "^22",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "postcss": "^8.5",
-    "tailwindcss": "^3.4.17",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.16",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }
 }

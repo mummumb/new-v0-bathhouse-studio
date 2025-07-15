@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
+import Image from "next/image"
 import { services } from "@/lib/events-data"
 import Navigation from "@/components/navigation"
 import Footer from "@/components/footer"
@@ -49,11 +50,13 @@ export default function ServiceDetailPage({ params }: { params: { slug: string }
       <main>
         {/* Hero Section */}
         <section className="relative h-[60vh] flex items-center justify-center text-white">
-          <img
+          <Image
             src={service.image || "/placeholder.svg"}
             alt={service.name}
+            fill
+            priority
+            sizes="100vw"
             className="absolute inset-0 w-full h-full object-cover"
-            loading="eager"
           />
           <div className={`absolute inset-0 bg-gradient-to-t ${service.overlayColor} opacity-80`} />
           <div className="relative text-center z-10 p-4">
@@ -87,7 +90,7 @@ export default function ServiceDetailPage({ params }: { params: { slug: string }
               <section id="benefits" className="mt-12">
                 <h2 className="text-3xl font-heading mb-6 text-bathhouse-slate">What to Expect</h2>
                 <div className="grid sm:grid-cols-2 gap-6">
-                  {service.benefits?.map((benefit) => (
+                  {service.benefits && service.benefits.map((benefit: { title: string; description: string }) => (
                     <div key={benefit.title} className="bg-white rounded-lg p-6 shadow-sm">
                       <h3 className="font-medium mb-2 text-bathhouse-slate">{benefit.title}</h3>
                       <p className="text-sm text-gray-600">{benefit.description}</p>
@@ -103,7 +106,7 @@ export default function ServiceDetailPage({ params }: { params: { slug: string }
                 <div className="bg-white rounded-lg p-6 shadow-sm mb-8 border border-gray-100">
                   <h3 className="text-2xl font-heading mb-4 text-bathhouse-slate">Your Guide</h3>
                   <div className="flex items-center mb-4">
-                    <img
+                    <Image
                       src={service.instructor.image || "/placeholder.svg"}
                       alt={service.instructor.name}
                       width={64}
@@ -134,7 +137,7 @@ export default function ServiceDetailPage({ params }: { params: { slug: string }
                       <span className="text-2xl font-heading text-bathhouse-slate">{service.price}</span>
                     </div>
                   </div>
-                  <Button size="lg" className="w-full bg-black hover:bg-gray-800 text-white border-0 mb-4" asChild>
+                  <Button size="lg" className="w-full bg-bathhouse-teal hover:bg-bathhouse-teal/90 text-white border-0 mb-4" asChild>
                     <a href="#contact">Book Your Session</a>
                   </Button>
                   <Button

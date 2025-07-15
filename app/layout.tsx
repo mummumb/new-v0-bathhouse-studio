@@ -131,7 +131,7 @@ const structuredData = {
   sameAs: ["https://instagram.com/bathhousestudio"],
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
@@ -140,8 +140,6 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <head>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className={`${interTight.variable} ${inter.variable} font-sans antialiased bg-white text-black`}>
         <Suspense fallback={null}>{children}</Suspense>
