@@ -17,7 +17,7 @@ const values = [
   },
 ]
 
-export default function ValuesSection() {
+export function ValuesSection() {
   return (
     <section className="bathhouse-section" style={{ backgroundColor: "#F2EBDE" }}>
       <div className="bathhouse-container">

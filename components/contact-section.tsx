@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 
-export default function ContactSection() {
+export function ContactSection() {
   return (
     <section id="contact" className="bathhouse-section" style={{ backgroundColor: "#F2EBDE" }}>
       <div className="bathhouse-container">

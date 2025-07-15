@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { MapPin, Calendar } from "lucide-react"
 import { events } from "@/lib/events-data"
 
-export default function RitualEventsSection() {
+export function RitualEventsSection() {
   return (
     <section id="events" className="bathhouse-section bg-white">
       <div className="bathhouse-container">

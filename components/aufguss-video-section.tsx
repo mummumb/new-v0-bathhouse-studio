@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from "react"
 import { Play, Pause, Volume2, VolumeX, Loader2 } from "lucide-react"
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer"
 
-export default function AufgussVideoSection() {
+export function AufgussVideoSection() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(true)

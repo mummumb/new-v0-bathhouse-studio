@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Clock, Users } from "lucide-react"
 import { events } from "@/lib/events-data"
 
-export default function UpcomingEventsSection() {
+export function UpcomingEventsSection() {
   // Sort events by date (earliest first)
   const sortedEvents = [...events].sort((a, b) => {
     const dateA = new Date(a.date)

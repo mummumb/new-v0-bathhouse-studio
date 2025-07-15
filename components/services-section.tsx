@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Clock, Calendar } from "lucide-react"
 import { services } from "@/lib/events-data"
 
-export default function ServicesSection() {
+export function ServicesSection() {
   return (
     <section id="services" className="bathhouse-section bg-white">
       <div className="bathhouse-container">

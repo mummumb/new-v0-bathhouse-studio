@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select"
 import { events, services } from "@/lib/events-data"
 
-export default function ContactCollaborateSection() {
+export function ContactCollaborateSection() {
   return (
     <section id="contact" className="bathhouse-section bg-white">
       <div className="bathhouse-container">

@@ -15,7 +15,7 @@ interface OptimizedVideoProps {
   onError?: () => void
 }
 
-export default function OptimizedVideo({
+export function OptimizedVideo({
   basePath,
   poster,
   alt,

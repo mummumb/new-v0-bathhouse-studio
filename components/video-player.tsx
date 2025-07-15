@@ -15,7 +15,7 @@ interface VideoPlayerProps {
   controls?: boolean
 }
 
-export default function VideoPlayer({
+export function VideoPlayer({
   src,
   poster,
   alt,

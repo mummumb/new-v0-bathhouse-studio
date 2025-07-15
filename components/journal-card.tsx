@@ -2,7 +2,7 @@ import Link from "next/link"
 // import Image from "next/image"
 import type { Post } from "@/lib/journal-data"
 
-export default function JournalCard({ post }: { post: Post }) {
+export function JournalCard({ post }: { post: Post }) {
   return (
     <Link href={`/journal/${post.slug}`} className="group block">
       <article className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">

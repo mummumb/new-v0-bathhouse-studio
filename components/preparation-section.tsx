@@ -52,7 +52,7 @@ const preparationSteps = [
   },
 ]
 
-export default function PreparationSection() {
+export function PreparationSection() {
   return (
     <section className="bathhouse-section bg-white">
       <div className="bathhouse-container">

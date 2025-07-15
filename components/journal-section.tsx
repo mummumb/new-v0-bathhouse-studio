@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowRight, Calendar } from "lucide-react"
 import { journalPosts } from "@/lib/journal-data"
 
-export default function JournalSection() {
+export function JournalSection() {
   // Get the first 3 posts for the home page
   const featuredPosts = journalPosts.slice(0, 3)
 

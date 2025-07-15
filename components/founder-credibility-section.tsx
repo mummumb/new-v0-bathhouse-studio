@@ -15,7 +15,7 @@ const achievements = [
   { number: "1000+", label: "Rituals Facilitated" },
 ]
 
-export default function FounderCredibilitySection() {
+export function FounderCredibilitySection() {
   return (
     <section id="founder" className="bathhouse-section bg-white">
       <div className="bathhouse-container">

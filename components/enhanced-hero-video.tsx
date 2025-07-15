@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils"
 const VIDEO_SOURCE = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Video-KwV1ZpWXgu439152qhwevLRFsdnBvK.MP4"
 const FALLBACK_IMAGE = "/images/amanda-aufguss-hero.jpeg"
 
-export default function EnhancedHeroVideo() {
+export function EnhancedHeroVideo() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [showPlayButton, setShowPlayButton] = useState(false)

@@ -1,6 +1,6 @@
 // import Image from "next/image"
 
-export default function CommunitySection() {
+export function CommunitySection() {
   return (
     <section className="bathhouse-section" style={{ backgroundColor: "#F2EBDE" }}>
       <div className="bathhouse-container">

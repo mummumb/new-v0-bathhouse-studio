@@ -15,7 +15,7 @@ const testimonials = [
   },
 ]
 
-export default function CommunityTestimonialsSection() {
+export function CommunityTestimonialsSection() {
   return (
     <section className="bathhouse-section bg-white">
       <div className="bathhouse-container">

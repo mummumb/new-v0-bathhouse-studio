@@ -20,7 +20,7 @@ interface BookingFormProps {
   eventLocation: string
 }
 
-export default function BookingForm({ eventSlug, eventTitle, eventDate, eventLocation }: BookingFormProps) {
+export function BookingForm({ eventSlug, eventTitle, eventDate, eventLocation }: BookingFormProps) {
   const googleFormUrl =
     GOOGLE_FORM_URLS[eventSlug as keyof typeof GOOGLE_FORM_URLS] || "https://forms.gle/DefaultFormID"
 

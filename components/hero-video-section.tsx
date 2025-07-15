@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import { ChevronDown, Play } from "lucide-react"
 
-export default function HeroVideoSection() {
+export function HeroVideoSection() {
   const [isVideoLoaded, setIsVideoLoaded] = useState(false)
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const [showPlayButton, setShowPlayButton] = useState(false)
