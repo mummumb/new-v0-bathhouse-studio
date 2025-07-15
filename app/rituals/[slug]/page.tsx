@@ -9,7 +9,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 export default async function RitualDetailPage({ params }: { params: { slug: string } }) {
   const ritual = await getRitualBySlug(params.slug)
 
-  if (!ritual || !ritual.isPublished) {
+  if (!ritual || !ritual.published) {
     notFound()
   }
 
@@ -30,24 +30,14 @@ export default async function RitualDetailPage({ params }: { params: { slug: str
         <section className="relative h-[60vh] flex items-center justify-center text-white">
           <img
             src={ritual.image || "/placeholder.svg"}
-            alt={ritual.imageAlt}
+            alt={ritual.title}
             className="absolute inset-0 w-full h-full object-cover"
             loading="eager"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
           <div className="relative text-center z-10 p-4 max-w-4xl mx-auto">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading mb-2">{ritual.title}</h1>
-            <p className="text-xl sm:text-2xl font-light italic mb-6">{ritual.subtitle}</p>
-            <div className="flex justify-center items-center space-x-6 text-lg font-medium">
-              <div className="flex items-center">
-                <Calendar className="mr-2 h-5 w-5" />
-                <span>{ritual.date}</span>
-              </div>
-              <div className="flex items-center">
-                <MapPin className="mr-2 h-5 w-5" />
-                <span>{ritual.location}</span>
-              </div>
-            </div>
+            <p className="text-xl sm:text-2xl font-light italic mb-6">{ritual.shortDescription}</p>
           </div>
         </section>
 
@@ -59,8 +49,7 @@ export default async function RitualDetailPage({ params }: { params: { slug: str
               <section id="details">
                 <h2 className="text-3xl font-heading mb-6 text-bathhouse-slate">About this Ritual</h2>
                 <div className="space-y-4 text-lg text-gray-700 leading-relaxed">
-                  <div dangerouslySetInnerHTML={{ __html: ritual.description }} />
-                  <div className="italic text-gray-600" dangerouslySetInnerHTML={{ __html: ritual.fullDescription }} />
+                  <div dangerouslySetInnerHTML={{ __html: ritual.longDescription }} />
                 </div>
               </section>
 
@@ -84,19 +73,19 @@ export default async function RitualDetailPage({ params }: { params: { slug: str
                     {ritual.schedule.map((item, index) => (
                       <div key={index} className="relative">
                         <div className="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-black border-4 border-bathhouse-cream" />
-                        <p className="font-bold text-bathhouse-slate">{item.time}</p>
-                        <p className="text-gray-600">{item.activity}</p>
+                        <p className="font-bold text-bathhouse-slate">{item.day}</p>
+                        <p className="text-gray-600">{item.time}</p>
                       </div>
                     ))}
                   </div>
                 </section>
               )}
 
-              {ritual.faqs && ritual.faqs.length > 0 && (
+              {ritual.faq && ritual.faq.length > 0 && (
                 <section id="faq" className="mt-12">
                   <h2 className="text-3xl font-heading mb-6 text-bathhouse-slate">Frequently Asked Questions</h2>
                   <Accordion type="single" collapsible className="w-full">
-                    {ritual.faqs.map((faq, index) => (
+                    {ritual.faq.map((faq, index) => (
                       <AccordionItem key={index} value={`item-${index}`} className="border-gray-200">
                         <AccordionTrigger className="text-left font-medium text-bathhouse-slate hover:text-black">
                           {faq.question}
@@ -125,7 +114,6 @@ export default async function RitualDetailPage({ params }: { params: { slug: str
                       />
                       <div>
                         <p className="font-bold text-bathhouse-slate">{ritual.instructor.name}</p>
-                        <p className="text-sm text-gray-500">{ritual.instructor.title}</p>
                       </div>
                     </div>
                     <div

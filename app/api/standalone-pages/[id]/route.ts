@@ -1,60 +1,84 @@
 import { NextResponse } from "next/server"
-import { getStandalonePages, saveStandalonePages } from "@/lib/data-utils"
+import { getStandalonePageById, saveStandalonePage, deleteStandalonePage } from "@/lib/data-utils"
+import type { StandalonePage } from "@/lib/types"
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
-    const pages = await getStandalonePages()
-    const page = pages.find((p) => p.id === Number.parseInt(params.id))
-
+    const page = await getStandalonePageById(params.id)
     if (!page) {
-      return NextResponse.json({ error: "Page not found" }, { status: 404 })
+      return NextResponse.json(
+        { error: "Standalone page not found" },
+        { status: 404 }
+      )
     }
 
     return NextResponse.json(page)
   } catch (error) {
     console.error("Error fetching standalone page:", error)
-    return NextResponse.json({ error: "Failed to fetch page" }, { status: 500 })
+    return NextResponse.json(
+      { error: "Failed to fetch standalone page" },
+      { status: 500 }
+    )
   }
 }
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
-    const updatedPage = await request.json()
-    const pages = await getStandalonePages()
-    const index = pages.findIndex((p) => p.id === Number.parseInt(params.id))
-
-    if (index === -1) {
-      return NextResponse.json({ error: "Page not found" }, { status: 404 })
+    const updates: Partial<StandalonePage> = await request.json()
+    
+    // Get existing page
+    const existingPage = await getStandalonePageById(params.id)
+    if (!existingPage) {
+      return NextResponse.json(
+        { error: "Standalone page not found" },
+        { status: 404 }
+      )
     }
 
-    pages[index] = {
-      ...pages[index],
-      ...updatedPage,
-      id: Number.parseInt(params.id),
+    // Merge updates with existing page
+    const updatedPage = {
+      ...existingPage,
+      ...updates,
+      id: params.id, // Ensure ID doesn't change
       updatedAt: new Date().toISOString(),
     }
 
-    await saveStandalonePages(pages)
-    return NextResponse.json(pages[index])
+    const savedPage = await saveStandalonePage(updatedPage)
+    return NextResponse.json(savedPage)
   } catch (error) {
     console.error("Error updating standalone page:", error)
-    return NextResponse.json({ error: "Failed to update page" }, { status: 500 })
+    return NextResponse.json(
+      { error: "Failed to update standalone page" },
+      { status: 500 }
+    )
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
-    const pages = await getStandalonePages()
-    const filteredPages = pages.filter((p) => p.id !== Number.parseInt(params.id))
-
-    if (filteredPages.length === pages.length) {
-      return NextResponse.json({ error: "Page not found" }, { status: 404 })
+    const success = await deleteStandalonePage(params.id)
+    if (!success) {
+      return NextResponse.json(
+        { error: "Standalone page not found" },
+        { status: 404 }
+      )
     }
 
-    await saveStandalonePages(filteredPages)
-    return NextResponse.json({ message: "Page deleted successfully" })
+    return NextResponse.json({ success: true })
   } catch (error) {
     console.error("Error deleting standalone page:", error)
-    return NextResponse.json({ error: "Failed to delete page" }, { status: 500 })
+    return NextResponse.json(
+      { error: "Failed to delete standalone page" },
+      { status: 500 }
+    )
   }
 }

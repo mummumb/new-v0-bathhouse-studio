@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { getStandalonePages, saveStandalonePages } from "@/lib/data-utils"
+import { getStandalonePages, saveStandalonePage } from "@/lib/data-utils"
 import type { StandalonePage } from "@/lib/types"
 
 export async function GET() {
@@ -8,29 +8,36 @@ export async function GET() {
     return NextResponse.json(pages)
   } catch (error) {
     console.error("Error fetching standalone pages:", error)
-    return NextResponse.json({ error: "Failed to fetch pages" }, { status: 500 })
+    return NextResponse.json(
+      { error: "Failed to fetch standalone pages" },
+      { status: 500 }
+    )
   }
 }
 
 export async function POST(request: Request) {
   try {
-    const newPage: Omit<StandalonePage, "id" | "createdAt" | "updatedAt"> = await request.json()
-    const pages = await getStandalonePages()
-    const id = pages.length > 0 ? Math.max(...pages.map((p) => p.id)) + 1 : 1
-    const now = new Date().toISOString()
+    const newPage: Omit<StandalonePage, "id"> & { id?: string } = await request.json()
 
-    const pageWithId: StandalonePage = {
+    // Generate ID if not provided
+    const pageId = newPage.id || `page-${Date.now()}`
+
+    // Add default values
+    const pageData = {
       ...newPage,
-      id,
-      createdAt: now,
-      updatedAt: now,
+      id: pageId,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      published: newPage.published ?? false,
     }
 
-    pages.push(pageWithId)
-    await saveStandalonePages(pages)
-    return NextResponse.json(pageWithId, { status: 201 })
+    const savedPage = await saveStandalonePage(pageData as StandalonePage)
+    return NextResponse.json(savedPage, { status: 201 })
   } catch (error) {
     console.error("Error creating standalone page:", error)
-    return NextResponse.json({ error: "Failed to create page" }, { status: 500 })
+    return NextResponse.json(
+      { error: "Failed to create standalone page" },
+      { status: 500 }
+    )
   }
 }

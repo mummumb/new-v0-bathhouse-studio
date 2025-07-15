@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/components/ui/use-toast"
+import { ritualsApi } from "@/lib/api-client"
 import type { Ritual } from "@/lib/types"
 import WysiwygEditor from "./wysiwyg-editor"
 import { PlusCircle, Trash2 } from "lucide-react"
@@ -21,7 +22,7 @@ const ritualSchema = z.object({
   shortDescription: z.string().min(1, "Short description is required"),
   longDescription: z.string().min(1, "Long description is required"),
   image: z.string().url("Must be a valid URL"),
-  status: z.enum(["published", "draft"]),
+  published: z.boolean(),
   instructor: z.object({
     name: z.string().min(1, "Instructor name is required"),
     bio: z.string().min(1, "Instructor bio is required"),
@@ -55,21 +56,25 @@ export default function RitualForm({ ritual, onClose }: RitualFormProps) {
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<Ritual>({
     resolver: zodResolver(ritualSchema),
     defaultValues: ritual || {
-      id: "",
+      id: `ritual-${Date.now()}`,
       title: "",
       slug: "",
       shortDescription: "",
       longDescription: "",
       image: "",
-      status: "draft",
+      published: false,
       instructor: { name: "", bio: "", image: "" },
       schedule: [],
       benefits: [],
       faq: [],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     },
   })
 
@@ -91,19 +96,26 @@ export default function RitualForm({ ritual, onClose }: RitualFormProps) {
     }
   }, [ritual, reset])
 
+  // Auto-generate slug from title
+  const watchedTitle = watch("title")
+  useEffect(() => {
+    if (watchedTitle && !ritual) {
+      const slug = watchedTitle
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .trim()
+      setValue("slug", slug)
+    }
+  }, [watchedTitle, ritual, setValue])
+
   const mutation = useMutation({
     mutationFn: async (data: Ritual) => {
-      const url = data.id ? `/api/rituals/${data.id}` : "/api/rituals"
-      const method = data.id ? "PUT" : "POST"
-      const response = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
-      if (!response.ok) {
-        throw new Error(`Failed to ${data.id ? "update" : "create"} ritual`)
+      if (ritual?.id) {
+        return ritualsApi.update(ritual.id, data)
+      } else {
+        return ritualsApi.create(data)
       }
-      return response.json()
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["rituals"] })
@@ -139,6 +151,16 @@ export default function RitualForm({ ritual, onClose }: RitualFormProps) {
           <Input id="slug" {...register("slug")} />
           {errors.slug && <p className="text-red-500 text-sm mt-1">{errors.slug.message}</p>}
         </div>
+      </div>
+
+      <div className="flex items-center space-x-2">
+        <input
+          type="checkbox"
+          id="published"
+          {...register("published")}
+          className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+        />
+        <Label htmlFor="published">Published</Label>
       </div>
 
       <div>
