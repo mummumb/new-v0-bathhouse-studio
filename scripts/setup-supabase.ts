@@ -10,7 +10,7 @@ if (!password) {
   process.exit(1)
 }
 const encodedPassword = encodeURIComponent(password)
-const host = 'db.uadfxqzxmusvpdohpark.supabase.co'
+const host = 'db.hfucsndfmoaxiiglnybh.supabase.co'
 const port = '5432'
 const database = 'postgres'
 

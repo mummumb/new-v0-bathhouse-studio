@@ -36,17 +36,6 @@ export async function GET() {
     return NextResponse.json({ error: 'Failed to fetch journal posts' }, { status: 500 })
   }
 }
-    const posts = await prisma.journalPost.findMany({
-      orderBy: { date: 'desc' }
-    })
-    // Parse categories back to array and format response
-    const formattedPosts = posts.map(formatJournalPost)
-    return NextResponse.json(formattedPosts)
-  } catch (error) {
-    console.error('Failed to fetch journal posts:', error)
-    return NextResponse.json({ error: 'Failed to fetch journal posts' }, { status: 500 })
-  }
-}
 
 export async function POST(request: Request) {
   try {
