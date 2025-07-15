@@ -1,34 +1,64 @@
 import { NextResponse } from "next/server"
-import { getEvents, saveEvents } from "@/lib/data-utils"
-import type { Event } from "@/lib/types"
+import { prisma } from "@/lib/db"
+import { Prisma } from "@/lib/generated/prisma"
+
+export const dynamic = 'force-dynamic'
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
-  const events = await getEvents()
-  const event = events.find((e) => e.id === Number.parseInt(params.id))
-  if (!event) {
-    return NextResponse.json({ error: "Event not found" }, { status: 404 })
+  try {
+    const event = await prisma.event.findUnique({
+      where: { id: parseInt(params.id) }
+    })
+    if (!event) {
+      return NextResponse.json({ error: "Event not found" }, { status: 404 })
+    }
+    return NextResponse.json(event)
+  } catch (error) {
+    console.error('Failed to fetch event:', error)
+    return NextResponse.json({ error: 'Failed to fetch event' }, { status: 500 })
   }
-  return NextResponse.json(event)
 }
 
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
-  const updatedEvent: Event = await request.json()
-  const events = await getEvents()
-  const index = events.findIndex((e) => e.id === Number.parseInt(params.id))
-  if (index === -1) {
-    return NextResponse.json({ error: "Event not found" }, { status: 404 })
+  try {
+    const data = await request.json()
+    const updatedEvent = await prisma.event.update({
+      where: { id: parseInt(params.id) },
+      data: {
+        slug: data.slug,
+        title: data.title,
+        category: data.category,
+        description: data.description,
+        image: data.image,
+        date: new Date(data.date),
+        time: data.time,
+        location: data.location,
+        capacity: data.capacity,
+        price: data.price,
+        isPublished: data.isPublished,
+      }
+    })
+    return NextResponse.json(updatedEvent)
+  } catch (error) {
+    console.error('Failed to update event:', error)
+    return NextResponse.json({ error: 'Failed to update event' }, { status: 500 })
   }
-  events[index] = updatedEvent
-  await saveEvents(events)
-  return NextResponse.json(updatedEvent)
 }
 
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
-  const events = await getEvents()
-  const filteredEvents = events.filter((e) => e.id !== Number.parseInt(params.id))
-  if (events.length === filteredEvents.length) {
-    return NextResponse.json({ error: "Event not found" }, { status: 404 })
+  try {
+    await prisma.event.delete({
+      where: { id: parseInt(params.id) }
+    })
+    return NextResponse.json({ message: "Event deleted" }, { status: 200 })
+  } catch (error: unknown) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      (error as Prisma.PrismaClientKnownRequestError).code === 'P2025'
+    ) {
+      return NextResponse.json({ error: 'Event not found' }, { status: 404 })
+    }
+    console.error('Failed to delete event:', error)
+    return NextResponse.json({ error: 'Failed to delete event' }, { status: 500 })
   }
-  await saveEvents(filteredEvents)
-  return NextResponse.json({ message: "Event deleted" }, { status: 200 })
 }

@@ -2,6 +2,8 @@ import { NextResponse } from "next/server"
 import { getRituals, saveRituals } from "@/lib/data-utils"
 import type { Ritual } from "@/lib/types"
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   const rituals = await getRituals()
   const ritual = rituals.find((r) => r.id === Number.parseInt(params.id))

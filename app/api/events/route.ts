@@ -1,18 +1,41 @@
 import { NextResponse } from "next/server"
-import { getEvents, saveEvents } from "@/lib/data-utils"
-import type { Event } from "@/lib/types"
+import { prisma } from "@/lib/db"
+
+export const dynamic = 'force-dynamic'
 
 export async function GET() {
-  const events = await getEvents()
-  return NextResponse.json(events)
+  try {
+    const events = await prisma.event.findMany({
+      orderBy: { date: 'asc' }
+    })
+    return NextResponse.json(events)
+  } catch (error) {
+    console.error('Failed to fetch events:', error)
+    return NextResponse.json({ error: 'Failed to fetch events' }, { status: 500 })
+  }
 }
 
 export async function POST(request: Request) {
-  const newEvent: Omit<Event, "id"> = await request.json()
-  const events = await getEvents()
-  const id = events.length > 0 ? Math.max(...events.map((e) => e.id)) + 1 : 1
-  const eventWithId = { ...newEvent, id }
-  events.push(eventWithId)
-  await saveEvents(events)
-  return NextResponse.json(eventWithId, { status: 201 })
+  try {
+    const data = await request.json()
+    const newEvent = await prisma.event.create({
+      data: {
+        slug: data.slug,
+        title: data.title,
+        category: data.category,
+        description: data.description,
+        image: data.image,
+        date: new Date(data.date),
+        time: data.time,
+        location: data.location,
+        capacity: data.capacity,
+        price: data.price,
+        isPublished: data.isPublished ?? true,
+      }
+    })
+    return NextResponse.json(newEvent, { status: 201 })
+  } catch (error) {
+    console.error('Failed to create event:', error)
+    return NextResponse.json({ error: 'Failed to create event' }, { status: 500 })
+  }
 }

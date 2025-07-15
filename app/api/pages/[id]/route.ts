@@ -2,6 +2,8 @@ import { NextResponse } from "next/server"
 import { getPageContent, savePageContent } from "@/lib/data-utils"
 import type { PageContent } from "@/lib/types"
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   const pages = await getPageContent()
   const page = pages.find((p) => p.id === params.id)

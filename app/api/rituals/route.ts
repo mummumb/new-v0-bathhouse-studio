@@ -2,6 +2,8 @@ import { NextResponse } from "next/server"
 import { getRituals, saveRituals } from "@/lib/data-utils"
 import type { Ritual } from "@/lib/types"
 
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   const rituals = await getRituals()
   return NextResponse.json(rituals)

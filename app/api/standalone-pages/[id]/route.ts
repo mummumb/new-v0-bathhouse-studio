@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server"
 import { getStandalonePages, saveStandalonePages } from "@/lib/data-utils"
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export const dynamic = 'force-dynamic'
+
+export async function GET(_request: Request, { params }: { params: { id: string } }) {
   try {
     const pages = await getStandalonePages()
-    const page = pages.find((p) => p.id === Number.parseInt(params.id))
+    const page = pages.find((p) => p.id === params.id)
 
     if (!page) {
       return NextResponse.json({ error: "Page not found" }, { status: 404 })
@@ -42,7 +44,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(_request: Request, { params }: { params: { id: string } }) {
   try {
     const pages = await getStandalonePages()
     const filteredPages = pages.filter((p) => p.id !== Number.parseInt(params.id))

@@ -3,13 +3,27 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "next build",
+    "build": "prisma generate && next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "postinstall": "prisma generate",
+    "db:push": "prisma db push",
+    "db:generate": "prisma generate",
+    "db:studio": "prisma studio",
+    "db:migrate": "prisma migrate dev",
+    "db:migrate:prod": "prisma migrate deploy",
+    "db:reset": "prisma migrate reset",
+    "db:seed": "tsx scripts/migrate-data.ts && tsx scripts/import-journal-posts.ts",
+    "db:backup": "tsx scripts/backup-db.ts",
+    "db:restore": "tsx scripts/restore-db.ts",
+    "db:migrate:cloud": "tsx scripts/migrate-to-cloud.ts",
+    "db:push:prod": "dotenv -e .env.production -- prisma db push",
+    "db:studio:prod": "dotenv -e .env.production -- prisma studio"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
+    "@prisma/client": "^6.11.1",
     "@radix-ui/react-accordion": "1.2.2",
     "@radix-ui/react-alert-dialog": "1.1.4",
     "@radix-ui/react-aspect-ratio": "1.1.1",
@@ -51,6 +65,7 @@
     "lucide-react": "^0.454.0",
     "next": "14.2.16",
     "next-themes": "^0.4.6",
+    "prisma": "^6.11.1",
     "react": "^18.3.1",
     "react-day-picker": "8.10.1",
     "react-dom": "^18.3.1",
@@ -58,6 +73,7 @@
     "react-resizable-panels": "^2.1.9",
     "recharts": "2.15.0",
     "sonner": "^1.7.4",
+    "sqlite3": "^5.1.7",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.9",
@@ -67,8 +83,11 @@
     "@types/node": "^22.16.3",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
+    "dotenv": "^17.2.0",
+    "dotenv-cli": "^8.0.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.17",
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   }
 }
