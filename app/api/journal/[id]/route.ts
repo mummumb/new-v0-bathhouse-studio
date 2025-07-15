@@ -2,6 +2,8 @@ import { NextResponse } from "next/server"
 import { getJournalPosts, saveJournalPosts } from "@/lib/data-utils"
 import type { JournalPost } from "@/lib/types"
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   const posts = await getJournalPosts()
   const post = posts.find((p) => p.id === Number.parseInt(params.id))
