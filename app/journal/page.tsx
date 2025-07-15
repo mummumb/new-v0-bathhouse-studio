@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 import { journalPosts, type Category } from "@/lib/journal-data"
-import Navigation from "@/components/navigation"
-import Footer from "@/components/footer"
+import { Navigation } from "@/components/navigation"
+import { Footer } from "@/components/footer"
 import JournalCard from "@/components/journal-card"
 import { cn } from "@/lib/utils"
 
