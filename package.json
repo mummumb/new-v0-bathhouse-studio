@@ -37,7 +37,7 @@
     "@radix-ui/react-toggle-group": "latest",
     "@radix-ui/react-tooltip": "latest",
     "@remix-run/react": "latest",
-    "@supabase/supabase-js": "^2.43.4",
+    "@supabase/supabase-js": "latest",
     "@sveltejs/kit": "latest",
     "@tailwindcss/typography": "latest",
     "@tanstack/react-query": "latest",
